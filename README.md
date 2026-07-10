@@ -59,7 +59,7 @@ Including:
 |---|---|---|
 | Language | Python | Core development language |
 | Dependency Management | `uv`, `pyproject.toml`, `uv.lock` | Package & environment management |
-| App / UI | Streamlit | Interactive dashboard (`app/Home.py`, `pages/`) |
+| App / UI | TypeScript + React (or Angular) | Interactive dashboard frontend |
 | Forecasting Models | ARIMA, Prophet, Moving Average | Time-series forecasting |
 | Anomaly Detection | Isolation Forest, Z-Score, IQR | Anomaly detection module |
 | Code Quality | Ruff, Black, MyPy | Linting, formatting, type checking |
@@ -70,7 +70,7 @@ Including:
 | Secret Scanning | Secret Scanner (pre-commit hook) | Prevents credential leaks |
 | CI/CD | GitHub Actions (`ci.yml`, `security.yml`, `lint.yml`, `release.yml`) | Lint → Test → Coverage → Security → Build → Deploy |
 | Containerization | Docker (`docker/`) | Packaging & deployment |
-| Deployment Targets | Streamlit Cloud, Render, Local, Docker | Hosting options |
+| Deployment Targets | Render, Local, Docker, Vercel/Netlify (frontend) | Hosting options |
 | Version Control Workflow | GitHub Flow, Semantic Commits | Branching & commit strategy |
 | Project Management | GitHub Issues, Labels, Milestones, Kanban | Task tracking |
 | Documentation | Markdown (`docs/`), architecture & API docs | Project documentation |
@@ -104,11 +104,17 @@ project-root/
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 │
-├── app/
-│   ├── Home.py
-│   ├── pages/
-│   ├── assets/
-│   └── components/
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── assets/
+│   │   ├── services/
+│   │   ├── routes/
+│   │   └── App.tsx        (or app.module.ts for Angular)
+│   ├── public/
+│   ├── package.json
+│   └── tsconfig.json
 │
 ├── configs/
 │
@@ -194,7 +200,7 @@ Business KPIs
              ▼
 Visualization
              ▼
-Streamlit Dashboard
+React / Angular Dashboard (TypeScript)
              ▼
 Export Reports
 ```
@@ -365,13 +371,13 @@ Every document to create.
 
 ---
 
-## 19. Streamlit UI Design
-- Every page
-- Widgets
-- Filters
-- Navigation
+## 19. React / Angular UI Design (TypeScript)
+- Every page/route
+- Components (widgets, filters, charts)
+- Navigation / Routing
 - Theme
-- Components
+- State Management
+- API Integration Layer
 
 ---
 
@@ -395,8 +401,8 @@ With formulas and implementation notes.
 
 ## 22. Deployment Guide
 - Docker
-- Streamlit Cloud
-- Render
+- Vercel / Netlify (frontend)
+- Render (backend)
 - Local
 
 ---
