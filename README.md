@@ -3,19 +3,183 @@
 ---
 
 ## 1. Cover Page
-- **Project Name:**
+# Project Information
+
+- **Project Name:** Supply Chain Analytics – Demand Forecasting & Anomaly Detection Platform
+
 - **Team Members:**
+  - Utsav J. Charkhawala
+  - Isaac Precious
+  - Rajarshi Ghosh
+  - Palak Thakur
+
 - **Roles:**
-- **Duration:**
-- **Version History:**
+  | Team Member | Role |
+  |-------------|------|
+  | **Utsav J. Charkhawala** | Team Lead, Solution Architect & Full Stack Integration |
+  | **Isaac Precious** | Time-Series Forecasting & Machine Learning Lead |
+  | **Rajarshi Ghosh** | Data Engineering & Analytics Lead |
+  | **Palak Thakur** | Quality Assurance, Documentation & Anomaly Detection Lead |
+
+- **Project Duration:** 4 Weeks (Month 2 Internship Project)
+
+- **Technology Stack:**
+  - **Frontend:** React.js + TypeScript *(Angular can be adopted if required)*
+  - **Backend:** FastAPI (Python)
+  - **Machine Learning:** Scikit-learn, Statsmodels, Prophet
+  - **Data Processing:** Pandas, NumPy
+  - **Visualization:** Plotly, Recharts
+  - **Database:** PostgreSQL
+  - **Testing:** Pytest
+  - **Code Quality:** Ruff, Black, MyPy
+  - **Version Control:** Git & GitHub
+  - **CI/CD:** GitHub Actions
+  - **Deployment:** Docker + Nginx
+
+---
+
+# Version History
+
+| Version | Date | Author | Description |
+|---------|------|--------|-------------|
+| v0.1.0 | DD-MM-YYYY | Utsav J. Charkhawala | Initial project planning, architecture, team role allocation, and repository setup. |
+| v0.2.0 | DD-MM-YYYY | Team | Week 1 implementation – Data ingestion, preprocessing, and exploratory data analysis. |
+| v0.3.0 | DD-MM-YYYY | Team | Week 2 implementation – Time-series decomposition, feature engineering, and anomaly detection. |
+| v0.4.0 | DD-MM-YYYY | Team | Week 3 implementation – Demand forecasting models, evaluation, and optimization. |
+| v1.0.0 | DD-MM-YYYY | Team | Week 4 implementation – Frontend integration, API development, testing, deployment, and final documentation. |
 
 ---
 
 ## 2. Executive Summary
-- **Business Problem**
-- **Solution**
-- **Objectives**
-- **Success Metrics**
+
+## Business Problem
+
+Efficient supply chain management is one of the most critical factors affecting the profitability and operational success of retail, e-commerce, manufacturing, and distribution businesses. Organizations must accurately predict future product demand to maintain optimal inventory levels while minimizing operational costs.
+
+Traditional inventory planning methods often rely on historical averages or manual estimations, which fail to account for changing market conditions, seasonal trends, promotional campaigns, holidays, or unexpected events. As a result, businesses frequently encounter two major challenges:
+
+- **Overestimating demand**, leading to excess inventory, increased warehouse costs, capital being tied up in unsold stock, product spoilage, and reduced cash flow.
+- **Underestimating demand**, resulting in stock shortages, delayed deliveries, lost revenue, dissatisfied customers, and damage to brand reputation.
+
+Additionally, abnormal events such as supplier delays, unexpected demand spikes, stock leakage, system failures, logistics disruptions, or viral product trends often remain unnoticed until they significantly impact business performance.
+
+Most organizations possess large volumes of historical sales and inventory data, but lack intelligent systems capable of transforming this data into actionable insights. Decision-makers require automated forecasting and anomaly detection solutions that provide early warnings and accurate demand predictions to support proactive inventory planning.
+
+---
+
+## Solution
+
+The proposed solution is a production-grade **Supply Chain Analytics Platform** that leverages Time Series Analysis, Machine Learning, and Statistical Analytics to optimize inventory planning and improve supply chain visibility.
+
+The system will process historical sales and inventory data, automatically clean and preprocess the dataset, engineer relevant time-series features, detect operational anomalies, and forecast future product demand.
+
+The platform will consist of two primary analytical components:
+
+### Demand Forecasting Engine
+Predict future product demand for configurable forecasting horizons using multiple forecasting algorithms such as:
+
+- Moving Average (Baseline)
+- ARIMA
+- Facebook Prophet
+
+The forecasting engine will assist procurement and inventory teams in making accurate purchasing decisions based on expected future demand.
+
+### Anomaly Detection Engine
+Automatically identify unusual inventory or sales behavior using statistical and machine learning techniques including:
+
+- Z-Score Analysis
+- Interquartile Range (IQR)
+- Isolation Forest
+
+Detected anomalies will be categorized based on severity and presented with contextual information to assist operational teams in identifying supply chain disruptions before they escalate.
+
+The platform will expose these insights through a modern web application built using **React + TypeScript** for the frontend and **FastAPI** for the backend, providing interactive dashboards, forecasting visualizations, anomaly alerts, KPI monitoring, and downloadable analytical reports.
+
+---
+
+## Objectives
+
+The primary objective of this project is to develop a scalable, maintainable, and production-ready Supply Chain Analytics Platform capable of improving inventory planning and operational decision-making through intelligent forecasting and automated anomaly detection.
+
+### Business Objectives
+
+- Improve inventory planning accuracy.
+- Reduce stockouts and excess inventory.
+- Enable proactive supply chain decision-making.
+- Identify abnormal operational events early.
+- Improve customer satisfaction through better product availability.
+- Reduce operational and warehousing costs.
+- Increase forecasting reliability using data-driven models.
+
+### Technical Objectives
+
+- Build an automated end-to-end data processing pipeline.
+- Develop robust time-series preprocessing workflows.
+- Implement statistical and machine learning based anomaly detection.
+- Develop multiple forecasting models and compare their performance.
+- Design a modular backend using FastAPI.
+- Develop a responsive frontend using React and TypeScript.
+- Implement REST APIs for seamless frontend-backend communication.
+- Ensure high code quality through automated testing and continuous integration.
+- Maintain comprehensive project documentation and GitHub workflow.
+
+---
+
+## Success Metrics
+
+The success of the project will be evaluated using both business and technical performance indicators.
+
+### Business Metrics
+
+- Reduction in forecasting error.
+- Improved inventory utilization.
+- Faster identification of supply chain anomalies.
+- Reduction in stockout incidents.
+- Reduction in excess inventory.
+- Improved operational visibility.
+- Faster decision-making for procurement teams.
+
+### Forecasting Performance Metrics
+
+- Mean Absolute Error (MAE)
+- Mean Absolute Percentage Error (MAPE)
+- Root Mean Square Error (RMSE)
+- Mean Squared Error (MSE)
+- R² Score (where applicable)
+
+### Anomaly Detection Metrics
+
+- Precision
+- Recall
+- F1-Score
+- False Positive Rate
+- False Negative Rate
+- Number of anomalies detected
+- Alert accuracy
+
+### Application Performance Metrics
+
+- API response time < 500 ms
+- Dashboard load time < 3 seconds
+- Forecast generation time < 10 seconds
+- Support for large historical datasets
+- High application availability
+
+### Code Quality Metrics
+
+- Minimum 90% automated test coverage.
+- Zero critical security vulnerabilities.
+- Successful CI/CD pipeline execution.
+- Ruff, Black, and MyPy compliance.
+- Modular and maintainable architecture.
+
+### Project Delivery Metrics
+
+- Completion of all planned features within the four-week timeline.
+- Daily GitHub commits following semantic commit conventions.
+- Complete technical documentation.
+- Successful deployment of the application.
+- Review-ready project with reproducible setup instructions.
 
 ---
 
