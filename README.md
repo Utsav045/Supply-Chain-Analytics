@@ -268,17 +268,157 @@ project-root/
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 │
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── routes/
+│   │   │   │   ├── forecast.py
+│   │   │   │   ├── anomaly.py
+│   │   │   │   ├── dashboard.py
+│   │   │   │   └── health.py
+│   │   │   └── router.py
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   ├── logger.py
+│   │   │   └── constants.py
+│   │   ├── database/
+│   │   │   ├── connection.py
+│   │   │   └── models.py
+│   │   ├── schemas/
+│   │   │   ├── forecast.py
+│   │   │   ├── anomaly.py
+│   │   │   └── common.py
+│   │   ├── services/
+│   │   │   ├── ingestion/
+│   │   │   │   ├── loader.py
+│   │   │   │   ├── validator.py
+│   │   │   │   └── cleaner.py
+│   │   │   ├── preprocessing/
+│   │   │   │   ├── datetime_processor.py
+│   │   │   │   ├── resampler.py
+│   │   │   │   └── interpolator.py
+│   │   │   ├── decomposition/
+│   │   │   │   └── seasonal.py
+│   │   │   ├── feature_engineering/
+│   │   │   │   ├── lag_features.py
+│   │   │   │   ├── rolling_features.py
+│   │   │   │   └── calendar_features.py
+│   │   │   ├── forecasting/
+│   │   │   │   ├── moving_average.py
+│   │   │   │   ├── arima.py
+│   │   │   │   ├── prophet.py
+│   │   │   │   ├── trainer.py
+│   │   │   │   └── evaluator.py
+│   │   │   ├── anomaly/
+│   │   │   │   ├── zscore.py
+│   │   │   │   ├── iqr.py
+│   │   │   │   ├── isolation_forest.py
+│   │   │   │   └── detector.py
+│   │   │   ├── visualization/
+│   │   │   │   ├── forecast_chart.py
+│   │   │   │   ├── anomaly_chart.py
+│   │   │   │   └── dashboard_chart.py
+│   │   │   └── utils/
+│   │   │       ├── metrics.py
+│   │   │       ├── helpers.py
+│   │   │       └── exceptions.py
+│   │   └── main.py
+│   ├── tests/
+│   │   └── conftest.py
+│   ├── pyproject.toml
+│   ├── .env.example
+│   └── README.md
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
+│   │   ├── api/
+│   │   │   ├── axios.ts
+│   │   │   ├── forecastApi.ts
+│   │   │   ├── anomalyApi.ts
+│   │   │   ├── dashboardApi.ts
+│   │   │   └── inventoryApi.ts
 │   │   ├── assets/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   └── App.tsx        (or app.module.ts for Angular)
-│   ├── public/
+│   │   │   └── styles/
+│   │   │       ├── globals.css
+│   │   │       ├── variables.css
+│   │   │       ├── theme.css
+│   │   │       └── animations.css
+│   │   ├── components/
+│   │   │   ├── charts/
+│   │   │   │   ├── ForecastChart.tsx
+│   │   │   │   ├── TrendChart.tsx
+│   │   │   │   ├── SeasonalityChart.tsx
+│   │   │   │   ├── AnomalyChart.tsx
+│   │   │   │   ├── KPIChart.tsx
+│   │   │   │   └── InventoryChart.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   ├── KPISection.tsx
+│   │   │   │   ├── SummaryCards.tsx
+│   │   │   │   ├── RecentAlerts.tsx
+│   │   │   │   └── TopProducts.tsx
+│   │   │   └── layout/
+│   │   │       ├── Navbar.tsx
+│   │   │       ├── Sidebar.tsx
+│   │   │       ├── Header.tsx
+│   │   │       ├── Footer.tsx
+│   │   │       └── Layout.tsx
+│   │   ├── features/
+│   │   │   ├── dashboard/
+│   │   │   │   ├── DashboardPage.tsx
+│   │   │   │   ├── dashboardSlice.ts
+│   │   │   │   ├── dashboardService.ts
+│   │   │   │   └── types.ts
+│   │   │   ├── forecasting/
+│   │   │   │   ├── ForecastPage.tsx
+│   │   │   │   ├── ForecastForm.tsx
+│   │   │   │   ├── ForecastTable.tsx
+│   │   │   │   ├── forecastSlice.ts
+│   │   │   │   └── types.ts
+│   │   │   ├── anomaly/
+│   │   │   │   ├── AnomalyPage.tsx
+│   │   │   │   ├── AnomalyTable.tsx
+│   │   │   │   ├── anomalySlice.ts
+│   │   │   │   └── types.ts
+│   │   │   └── inventory/
+│   │   │       ├── InventoryPage.tsx
+│   │   │       ├── InventoryTable.tsx
+│   │   │       ├── inventorySlice.ts
+│   │   │       └── types.ts
+│   │   ├── hooks/
+│   │   │   ├── useForecast.ts
+│   │   │   ├── useAnomaly.ts
+│   │   │   ├── useDashboard.ts
+│   │   │   ├── useInventory.ts
+│   │   │   └── useDebounce.ts
+│   │   ├── layouts/
+│   │   │   ├── MainLayout.tsx
+│   │   │   └── AuthLayout.tsx
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Forecast.tsx
+│   │   │   ├── Anomaly.tsx
+│   │   │   ├── Inventory.tsx
+│   │   │   ├── Reports.tsx
+│   │   │   ├── Settings.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── router/
+│   │   │   ├── AppRouter.tsx
+│   │   │   ├── PrivateRoute.tsx
+│   │   │   └── routes.ts
+│   │   ├── store/
+│   │   │   ├── index.ts
+│   │   │   └── store.ts
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── vite-env.d.ts
+│   ├── .env.example
+│   ├── eslint.config.js
+│   ├── prettier.config.js
+│   ├── vite.config.ts
+│   ├── tsconfig.json
 │   ├── package.json
-│   └── tsconfig.json
+│   └── README.md
 │
 ├── configs/
 │
