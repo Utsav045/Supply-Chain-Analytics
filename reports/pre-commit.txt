@@ -1,9 +1,9 @@
 Pre-commit report
 Branch: utsav
-Timestamp: Sat, Jul 11, 2026  6:21:18 PM
+Timestamp: Tue, Jul 14, 2026 10:57:41 AM
 ----------------------------------------
 Created/ensured folders: logs, artifacts, exports
 Frontend compile: PASS
+Python compile: PASS
 Frontend lint: PASS
-Security scan: SKIPPED (bandit not installed)
-All checks passed
+Backend lint: FAIL
