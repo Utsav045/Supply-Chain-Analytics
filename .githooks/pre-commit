@@ -11,6 +11,14 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# Prepends local virtual environment bin/scripts directory to PATH if present
+# This ensures that tools like black, isort, ruff, bandit, and python are run from the venv
+if [ -d ".venv/Scripts" ]; then
+  export PATH="$(pwd)/.venv/Scripts:$PATH"
+elif [ -d ".venv/bin" ]; then
+  export PATH="$(pwd)/.venv/bin:$PATH"
+fi
+
 # Helper to append messages to report
 report_file=""
 add_report() {
@@ -66,8 +74,10 @@ fi
 if [ -f "requirements.txt" ]; then
   echo "${YELLOW}Checking Python syntax...${NC}"
   py_compile_output=$(python - <<'PY'
-import compileall, sys, pathlib
-if not compileall.compile_dir('.', quiet=1):
+import compileall, sys, re
+# Exclude standard directories (.venv, node_modules, .git, frontend) from compilation check
+rx = re.compile(r'[\\/](\.venv|\.git|node_modules|frontend)[\\/]')
+if not compileall.compile_dir('.', rx=rx, quiet=1):
     sys.exit(1)
 PY
 ) 2>&1
