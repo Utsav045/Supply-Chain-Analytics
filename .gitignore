@@ -1,0 +1,35 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python caching & build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Node/Frontend dependencies & builds
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# Local configuration and logs
+.env
+backend/.env
+frontend/.env
+*.log
+logs/
+reports/pre-commit.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db

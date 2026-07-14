@@ -1,0 +1,152 @@
+#!/bin/sh
+
+# Enhanced pre-commit hook
+# This hook runs a series of checks (compile, lint, test, security),
+# creates required directories, and writes a detailed report.
+# It aborts the commit if any check fails.
+
+# ANSI color codes
+RED=''
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
+# Prepends local virtual environment bin/scripts directory to PATH if present
+# This ensures that tools like black, isort, ruff, bandit, and python are run from the venv
+if [ -d ".venv/Scripts" ]; then
+  export PATH="$(pwd)/.venv/Scripts:$PATH"
+elif [ -d ".venv/bin" ]; then
+  export PATH="$(pwd)/.venv/bin:$PATH"
+fi
+
+# Helper to append messages to report
+report_file=""
+add_report() {
+  echo "$1" >> "$report_file"
+}
+
+# Get current branch and timestamp
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
+
+# Ensure reports directory exists
+mkdir -p reports
+report_file="reports/pre-commit.txt"
+# Truncate previous report
+> "$report_file"
+
+# Header for report
+add_report "Pre-commit report"
+add_report "Branch: $branch"
+add_report "Timestamp: $(date)"
+add_report "----------------------------------------"
+# If there are no staged changes, ask the user whether to allow an empty commit
+if git diff --cached --quiet; then
+  echo "${YELLOW}No staged changes detected.${NC}"
+  read -p "Proceed with empty commit? (y/N): " answer
+  case "${answer}" in
+    [Yy]*) echo "${GREEN}User allowed empty commit.${NC}"; exit 0 ;;
+    *) echo "${RED}Commit aborted – no changes to commit.${NC}"; exit 1 ;;
+  esac
+fi
+
+
+# Create generic folders used by the project
+echo "${YELLOW}Creating standard folders...${NC}"
+mkdir -p logs artifacts exports
+add_report "Created/ensured folders: logs, artifacts, exports"
+
+# --- Compile step -------------------------------------------------
+# Frontend compile (if applicable)
+compile_success=1
+if [ -d "frontend" ]; then
+  if [ -f "frontend/package.json" ]; then
+    echo "${YELLOW}Running frontend compile (npm run build)...${NC}"
+    (cd frontend && npm run build) || compile_success=0
+    add_report "Frontend compile: $(if [ $compile_success -eq 1 ]; then echo "PASS"; else echo "FAIL"; fi)"
+  else
+    echo "${YELLOW}frontend/package.json not found, skipping compile.${NC}"
+    add_report "Frontend compile: SKIPPED (no package.json)"
+  fi
+fi
+
+# Backend Python compile check
+if [ -f "requirements.txt" ]; then
+  echo "${YELLOW}Checking Python syntax...${NC}"
+  py_compile_output=$(python - <<'PY'
+import compileall, sys, re
+# Exclude standard directories (.venv, node_modules, .git, frontend) from compilation check
+rx = re.compile(r'[\\/](\.venv|\.git|node_modules|frontend)[\\/]')
+if not compileall.compile_dir('.', rx=rx, quiet=1):
+    sys.exit(1)
+PY
+) 2>&1
+  if [ $? -ne 0 ]; then
+    compile_success=0
+    echo "${RED}Python syntax errors detected.${NC}"
+    echo "$py_compile_output"
+    add_report "Python compile: FAIL"
+    add_report "$py_compile_output"
+  else
+    add_report "Python compile: PASS"
+  fi
+fi
+
+if [ $compile_success -ne 1 ]; then
+  echo "Compile step failed. Abort commit."
+  exit 1
+fi
+
+# --- Lint step ----------------------------------------------------
+lint_success=1
+# Frontend lint
+if [ -d "frontend" ]; then
+  if [ -f "frontend/package.json" ]; then
+    echo "${YELLOW}Running frontend lint (npm run lint)...${NC}"
+    (cd frontend && npm run lint) || lint_success=0
+    add_report "Frontend lint: $(if [ $lint_success -eq 1 ]; then echo "PASS"; else echo "FAIL"; fi)"
+  else
+    echo "${YELLOW}frontend/package.json not found, skipping lint.${NC}"
+    add_report "Frontend lint: SKIPPED (no package.json)"
+  fi
+fi
+
+# Backend lint using black, isort, ruff
+if [ -f "requirements.txt" ]; then
+  echo "${YELLOW}Running backend lint (black, isort, ruff)...${NC}"
+  black . || lint_success=0
+  isort . || lint_success=0
+  ruff check . || lint_success=0
+  add_report "Backend lint: $(if [ $lint_success -eq 1 ]; then echo "PASS"; else echo "FAIL"; fi)"
+fi
+
+if [ $lint_success -ne 1 ]; then
+  echo "Lint step failed. Abort commit."
+  exit 1
+fi
+
+
+
+# --- Security step ------------------------------------------------
+security_success=1
+# Example security scan using bandit (if installed)
+if command -v bandit >/dev/null 2>&1; then
+  echo "${YELLOW}Running security scan (bandit)...${NC}"
+  bandit -r . -lll || security_success=0
+  add_report "Security scan (bandit): $(if [ $security_success -eq 1 ]; then echo "PASS"; else echo "FAIL"; fi)"
+else
+  echo "${YELLOW}Bandit not found – skipping security scan.${NC}"
+  add_report "Security scan: SKIPPED (bandit not installed)"
+fi
+
+if [ $security_success -ne 1 ]; then
+  echo "Security scan failed. Abort commit."
+  exit 1
+fi
+
+# All checks passed
+add_report "All checks passed"
+# Show report in terminal
+echo "----- Pre-commit report -----"
+cat "$report_file"
+exit 0
