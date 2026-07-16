@@ -1,8 +1,11 @@
 Pre-commit report
-Branch: rajarshi
-Timestamp: Thu, Jul 16, 2026  7:43:42 AM
+Branch: utsav
+Timestamp: Thu, Jul 16, 2026 12:26:24 PM
 ----------------------------------------
 Created/ensured folders: logs, artifacts, exports
-Frontend compile: FAIL
-Python compile: FAIL
-
+Frontend compile: PASS
+Python compile: PASS
+Frontend lint: PASS
+Backend lint: PASS
+Security scan: SKIPPED (bandit not installed)
+All checks passed

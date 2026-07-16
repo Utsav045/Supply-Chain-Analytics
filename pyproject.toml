@@ -28,8 +28,6 @@ dependencies = [
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "I", "N", "W", "B"]
-ignore = []
 src = ["backend", "src"]
 exclude = [
     ".git",
@@ -40,6 +38,11 @@ exclude = [
     "node_modules",
     "frontend/node_modules",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "B"]
+ignore = []
+
 
 [tool.black]
 line-length = 88
