@@ -43,6 +43,7 @@
 | Version | Date | Author | Description |
 |---------|------|--------|-------------|
 | v0.1.0 | DD-MM-YYYY | Utsav J. Charkhawala | Initial project planning, architecture, team role allocation, and repository setup. |
+| v0.1.1 | 16-07-2026 | Antigravity AI | Generated src subdirectories, files, testing outlines, configs, and workflow templates (no code). |
 | v0.2.0 | DD-MM-YYYY | Team | Week 1 implementation – Data ingestion, preprocessing, and exploratory data analysis. |
 | v0.3.0 | DD-MM-YYYY | Team | Week 2 implementation – Time-series decomposition, feature engineering, and anomaly detection. |
 | v0.4.0 | DD-MM-YYYY | Team | Week 3 implementation – Demand forecasting models, evaluation, and optimization. |
