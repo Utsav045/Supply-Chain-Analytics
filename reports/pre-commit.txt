@@ -1,9 +1,8 @@
 Pre-commit report
-Branch: utsav
-Timestamp: Tue, Jul 14, 2026 10:57:41 AM
+Branch: rajarshi
+Timestamp: Thu, Jul 16, 2026  7:43:42 AM
 ----------------------------------------
 Created/ensured folders: logs, artifacts, exports
-Frontend compile: PASS
-Python compile: PASS
-Frontend lint: PASS
-Backend lint: FAIL
+Frontend compile: FAIL
+Python compile: FAIL
+
