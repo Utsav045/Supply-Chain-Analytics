@@ -66,6 +66,7 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 88
+known_first_party = ["app", "src"]
 skip = [".venv", "node_modules", ".git", "frontend/node_modules"]
 
 [tool.mypy]
