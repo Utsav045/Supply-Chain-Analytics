@@ -7,7 +7,7 @@ detection requests, ensuring strict compliance with application constants.
 Author: Antigravity AI
 """
 
-from datetime import date, datetime
+import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -21,21 +21,41 @@ class AnomalyBase(BaseModel):
     product_id: str = Field(
         ..., description="Associated product identifier", min_length=1, max_length=50
     )
-    date: date = Field(..., description="Date of the anomaly record")
+
+    date: datetime.date = Field(
+        ..., description="Date of the anomaly record"
+    )
+
     metric_name: str = Field(
         ...,
         description="Target metric (e.g., sales, inventory)",
         min_length=1,
         max_length=50,
     )
-    metric_value: float = Field(..., description="Observed metric value")
-    is_anomaly: bool = Field(
-        default=True, description="True if this data point is flagged as an anomaly"
+
+    metric_value: float = Field(
+        ..., description="Observed metric value"
     )
-    severity: str = Field(..., description="Severity of anomaly (low, medium, high)")
-    method: str = Field(..., description="Detection method used")
+
+    is_anomaly: bool = Field(
+        default=True,
+        description="True if this data point is flagged as an anomaly",
+    )
+
+    severity: str = Field(
+        ...,
+        description="Severity of anomaly (low, medium, high)",
+    )
+
+    method: str = Field(
+        ...,
+        description="Detection method used",
+    )
+
     description: Optional[str] = Field(
-        None, description="Detailed explanation/context of the anomaly", max_length=500
+        None,
+        description="Detailed explanation/context of the anomaly",
+        max_length=500,
     )
 
     @field_validator("method")
@@ -56,7 +76,7 @@ class AnomalyBase(BaseModel):
         """Validates that the severity is low, medium, or high."""
         valid_severities = {"low", "medium", "high", "critical"}
         if v.lower() not in valid_severities:
-            allowed = ", ".join(valid_severities)
+            allowed = ", ".join(sorted(valid_severities))
             raise ValueError(
                 f"Invalid severity level '{v}'. Allowed levels: {allowed}"
             )
@@ -73,7 +93,7 @@ class AnomalyResponse(AnomalyBase):
     """Schema for Anomaly responses containing database ID."""
 
     id: int
-    created_at: datetime
+    created_at: datetime.datetime
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -88,6 +108,7 @@ class AnomalyDetectionRequest(BaseModel):
             "If null or empty, processes all products."
         ),
     )
+
     method: str = Field(
         default="z_score",
         description=(
@@ -95,11 +116,13 @@ class AnomalyDetectionRequest(BaseModel):
             "(z_score, iqr, isolation_forest)"
         ),
     )
+
     threshold: float = Field(
         default=3.0,
         gt=0.0,
         description="Z-score threshold or multiplier for IQR",
     )
+
     contamination: float = Field(
         default=0.05,
         gt=0.0,
