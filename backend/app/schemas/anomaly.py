@@ -22,9 +22,7 @@ class AnomalyBase(BaseModel):
         ..., description="Associated product identifier", min_length=1, max_length=50
     )
 
-    date: datetime.date = Field(
-        ..., description="Date of the anomaly record"
-    )
+    date: datetime.date = Field(..., description="Date of the anomaly record")
 
     metric_name: str = Field(
         ...,
@@ -33,9 +31,7 @@ class AnomalyBase(BaseModel):
         max_length=50,
     )
 
-    metric_value: float = Field(
-        ..., description="Observed metric value"
-    )
+    metric_value: float = Field(..., description="Observed metric value")
 
     is_anomaly: bool = Field(
         default=True,
@@ -77,9 +73,7 @@ class AnomalyBase(BaseModel):
         valid_severities = {"low", "medium", "high", "critical"}
         if v.lower() not in valid_severities:
             allowed = ", ".join(sorted(valid_severities))
-            raise ValueError(
-                f"Invalid severity level '{v}'. Allowed levels: {allowed}"
-            )
+            raise ValueError(f"Invalid severity level '{v}'. Allowed levels: {allowed}")
         return v.lower()
 
 
