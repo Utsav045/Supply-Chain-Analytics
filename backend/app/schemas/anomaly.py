@@ -57,9 +57,7 @@ class AnomalyBase(BaseModel):
         valid_severities = {"low", "medium", "high", "critical"}
         if v.lower() not in valid_severities:
             allowed = ", ".join(valid_severities)
-            raise ValueError(
-                f"Invalid severity level '{v}'. Allowed levels: {allowed}"
-            )
+            raise ValueError(f"Invalid severity level '{v}'. Allowed levels: {allowed}")
         return v.lower()
 
 
