@@ -1,4 +1,14 @@
 Pre-commit report
+<<<<<<< HEAD
+Branch: utsav
+Timestamp: Fri, Jul 17, 2026 12:00:55 PM
+=======
 Branch: rajarshi
-Timestamp: Sat, Jul 18, 2026  3:47:42 PM
+Timestamp: Thu, Jul 16, 2026  8:55:09 PM
+>>>>>>> rajarshi
 ----------------------------------------
+Created/ensured folders: logs, artifacts, exports
+Frontend compile: PASS
+Python compile: PASS
+Frontend lint: PASS
+Backend lint: FAIL
