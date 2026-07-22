@@ -1,9 +1,11 @@
 Pre-commit report
 Branch: utsav
-Timestamp: Wed, Jul 22, 2026 12:24:23 PM
+Timestamp: Wed Jul 22 13:41:17 IST 2026
 ----------------------------------------
 Created/ensured folders: logs, artifacts, exports
 Frontend compile: PASS
-Python compile: FAIL
-*** Error compiling '.\\backend\\app\\services\\preprocessing\\resampler.py'...
-Sorry: IndentationError: unexpected indent (resampler.py, line 101)
+Python compile: PASS
+Frontend lint: PASS
+Backend lint: PASS
+Security scan: SKIPPED (bandit not installed)
+All checks passed

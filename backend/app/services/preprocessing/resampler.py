@@ -104,7 +104,7 @@ class Resampler:
         try:
             # Determine aggregation methods
             agg_methods = self._get_aggregation_methods(df, aggregation_config)
-            
+
             if not agg_methods:
                 msg = "No numeric columns to resample"
                 logger.error(msg)
