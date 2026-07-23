@@ -47,9 +47,9 @@ def main():
 
     os.makedirs("data/processed", exist_ok=True)
 
-    sales_df.to_excel("data/processed/clean_sales_data.xlsx", index=False)
-    inventory_df.to_excel("data/processed/clean_inventory_data.xlsx", index=False)
-    supplier_df.to_excel("data/processed/clean_supplier_data.xlsx", index=False)
+    sales_df.to_csv("data/processed/clean_sales_data.csv", index=False)
+    inventory_df.to_csv("data/processed/clean_inventory_data.csv", index=False)
+    supplier_df.to_csv("data/processed/clean_supplier_data.csv", index=False)
 
     print("=======================================")
     print("All datasets cleaned successfully.")
