@@ -27,17 +27,17 @@ def main():
 
     print("Loading cleaned datasets...\n")
 
-    sales_df = pd.read_excel("data/processed/clean_sales_data.xlsx")
-    inventory_df = pd.read_excel("data/processed/clean_inventory_data.xlsx")
-    supplier_df = pd.read_excel("data/processed/clean_supplier_data.xlsx")
+    sales_df = pd.read_csv("data/processed/clean_sales_data.csv")
+    inventory_df = pd.read_csv("data/processed/clean_inventory_data.csv")
+    supplier_df = pd.read_csv("data/processed/clean_supplier_data.csv")
 
     sales_df = process_datetime(sales_df)
     inventory_df = process_datetime(inventory_df)
     supplier_df = process_datetime(supplier_df)
 
-    sales_df.to_excel("data/processed/clean_sales_data.xlsx", index=False)
-    inventory_df.to_excel("data/processed/clean_inventory_data.xlsx", index=False)
-    supplier_df.to_excel("data/processed/clean_supplier_data.xlsx", index=False)
+    sales_df.to_csv("data/processed/clean_sales_data.csv", index=False)
+    inventory_df.to_csv("data/processed/clean_inventory_data.csv", index=False)
+    supplier_df.to_csv("data/processed/clean_supplier_data.csv", index=False)
 
     print("===================================")
     print("Datetime preprocessing completed.")
