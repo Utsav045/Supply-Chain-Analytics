@@ -1,60 +1,68 @@
-import os
-
 import pandas as pd
 
 
 def clean_data(df):
-    print("Cleaning dataset...")
 
     # Remove duplicate rows
     df = df.drop_duplicates()
 
-    # Handle missing values
     for column in df.columns:
-        if pd.api.types.is_numeric_dtype(df[column]):
-            df[column] = pd.to_numeric(df[column], errors="coerce")
-            df[column] = df[column].fillna(df[column].median())
+
+        # Convert numeric-like columns
+        converted = pd.to_numeric(df[column], errors="coerce")
+
+        # If most values are numeric, treat as numeric
+        if converted.notna().sum() > 0:
+
+            median_value = converted.median()
+
+            converted = converted.fillna(median_value)
+
+            converted[converted < 0] = median_value
+
+            # Convert float to int if column contains whole numbers
+            if (converted % 1 == 0).all():
+                df[column] = converted.astype(int)
+            else:
+                df[column] = converted
+
         else:
-            df[column] = df[column].fillna(df[column].mode()[0])
-
-    # Handle negative values in numeric columns
-    numeric_columns = df.select_dtypes(include=["number"]).columns
-
-    for column in numeric_columns:
-        median_value = df[column].median()
-
-        if pd.api.types.is_integer_dtype(df[column]):
-            median_value = int(round(median_value))
-
-        df.loc[df[column] < 0, column] = median_value
-
-    print("Dataset cleaned successfully.\n")
+            # String column
+            df[column] = df[column].fillna("Unknown")
+            df[column] = df[column].replace("", "Unknown")
 
     return df
 
 
 def main():
 
-    print("Loading datasets...\n")
+    print("===================================")
+    print("Loading Sample Datasets...")
+    print("===================================")
 
-    sales_df = pd.read_excel("data/sample/sales_raw_data.xlsx")
-    inventory_df = pd.read_excel("data/sample/inventory_raw_data.xlsx")
-    supplier_df = pd.read_excel("data/sample/supplier_raw_data.xlsx")
+    sales_df = pd.read_csv("data/sample/sales_raw_data.csv")
+    inventory_df = pd.read_csv("data/sample/inventory_raw_data.csv")
+    supplier_df = pd.read_csv("data/sample/supplier_raw_data.csv")
 
+    print("Cleaning Sales Dataset...")
     sales_df = clean_data(sales_df)
+
+    print("Cleaning Inventory Dataset...")
     inventory_df = clean_data(inventory_df)
+
+    print("Cleaning Supplier Dataset...")
     supplier_df = clean_data(supplier_df)
 
-    os.makedirs("data/processed", exist_ok=True)
+    print("Saving Cleaned Datasets...")
 
     sales_df.to_csv("data/processed/clean_sales_data.csv", index=False)
     inventory_df.to_csv("data/processed/clean_inventory_data.csv", index=False)
     supplier_df.to_csv("data/processed/clean_supplier_data.csv", index=False)
 
-    print("=======================================")
-    print("All datasets cleaned successfully.")
-    print("Saved in data/processed/")
-    print("=======================================")
+    print("===================================")
+    print("Cleaning Completed Successfully")
+    print("Files Saved in data/processed/")
+    print("===================================")
 
 
 if __name__ == "__main__":
