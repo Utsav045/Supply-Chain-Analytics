@@ -42,7 +42,6 @@ class IQRDetector:
 
 
 if __name__ == "__main__":
-
     sample_data: list[Number] = [
         10,
         12,
