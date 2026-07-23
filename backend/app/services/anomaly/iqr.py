@@ -35,10 +35,7 @@ class IQRDetector:
         lower_bound = q1 - (multiplier * iqr)
         upper_bound = q3 + (multiplier * iqr)
 
-        return [
-            bool(value < lower_bound or value > upper_bound)
-            for value in data
-        ]
+        return [bool(value < lower_bound or value > upper_bound) for value in data]
 
 
 if __name__ == "__main__":
