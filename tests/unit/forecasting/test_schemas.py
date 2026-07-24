@@ -1,6 +1,6 @@
 """Tests for forecasting Pydantic schemas."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from pydantic import ValidationError
@@ -14,7 +14,7 @@ from src.forecasting.schemas import (
 def test_complete_demand_observation_is_valid() -> None:
     """A complete historical observation should be accepted."""
     observation = DemandObservation(
-        date=datetime(2026, 1, 1),
+        date=datetime(2026, 1, 1, tzinfo=timezone.utc),
         sku_id="SKU-001",
         demand=25,
         inventory_level=100,
@@ -33,7 +33,7 @@ def test_complete_demand_observation_is_valid() -> None:
 def test_minimum_demand_observation_is_valid() -> None:
     """Optional business variables should remain optional."""
     observation = DemandObservation(
-        date=datetime(2026, 1, 1),
+        date=datetime(2026, 1, 1, tzinfo=timezone.utc),
         sku_id="SKU-001",
         demand=25,
     )
@@ -47,7 +47,7 @@ def test_negative_demand_is_rejected() -> None:
     """Schema validation should reject negative demand."""
     with pytest.raises(ValidationError):
         DemandObservation(
-            date=datetime(2026, 1, 1),
+            date=datetime(2026, 1, 1, tzinfo=timezone.utc),
             sku_id="SKU-001",
             demand=-1,
         )
@@ -56,7 +56,7 @@ def test_negative_demand_is_rejected() -> None:
 def test_empty_optional_strings_become_none() -> None:
     """Empty category and location fields should be standardized."""
     observation = DemandObservation(
-        date=datetime(2026, 1, 1),
+        date=datetime(2026, 1, 1, tzinfo=timezone.utc),
         sku_id="SKU-001",
         demand=10,
         category=" ",
