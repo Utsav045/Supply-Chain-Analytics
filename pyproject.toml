@@ -13,7 +13,20 @@ dependencies = [
 dev = [
     "black>=26.5.1",
     "mypy>=2.3.0",
+    "pandas-stubs>=3.0.3.260530",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.16.0",
 ]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.12"
+explicit_package_bases = true
+mypy_path = "."
