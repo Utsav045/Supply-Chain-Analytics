@@ -157,19 +157,15 @@ def normalize_boolean_column(
     Supported values include true, false, yes, no, 1 and 0.
     """
     mapping = {
-        True: True,
-        False: False,
-        1: True,
-        0: False,
-        "1": True,
-        "0": False,
-        "true": True,
-        "false": False,
-        "yes": True,
-        "no": False,
-        "y": True,
-        "n": False,
-    }
+            "1": True,
+            "0": False,
+            "true": True,
+            "false": False,
+            "yes": True,
+            "no": False,
+            "y": True,
+            "n": False,
+        }
 
     normalized = series.map(
         lambda value: (
