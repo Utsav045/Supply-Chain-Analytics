@@ -23,8 +23,8 @@ def create_forecasting_features(
         ValueError: If the dataset is empty, lacks demand, or does not
             use a DatetimeIndex.
     """
-    if not isinstance(dataframe, pd.DataFrame):
-        raise TypeError("Forecasting input must be a pandas DataFrame.")
+    if not isinstance(dataframe.index, pd.DatetimeIndex):
+        raise TypeError("Forecasting features require a DatetimeIndex.")
 
     if dataframe.empty:
         raise ValueError("Forecasting feature input cannot be empty.")
