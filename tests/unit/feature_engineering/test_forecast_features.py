@@ -123,7 +123,7 @@ def test_non_datetime_index_is_rejected() -> None:
     )
 
     with pytest.raises(
-        ValueError,
+        TypeError,
         match="DatetimeIndex",
     ):
         create_forecasting_features(dataframe)
