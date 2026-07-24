@@ -4,11 +4,7 @@ import pandas as pd
 def resample_dataset(df, date_column):
 
     # Convert to datetime
-    df[date_column] = pd.to_datetime(
-        df[date_column],
-        dayfirst=True,
-        errors="coerce"
-    )
+    df[date_column] = pd.to_datetime(df[date_column], dayfirst=True, errors="coerce")
 
     # Remove invalid dates
     df = df.dropna(subset=[date_column])
@@ -57,20 +53,13 @@ def main():
 
     print("Saving datasets...")
 
-    sales_resampled.to_csv(
-        "data/processed/resampled_sales_data.csv",
-        index=False
-    )
+    sales_resampled.to_csv("data/processed/resampled_sales_data.csv", index=False)
 
     inventory_resampled.to_csv(
-        "data/processed/resampled_inventory_data.csv",
-        index=False
+        "data/processed/resampled_inventory_data.csv", index=False
     )
 
-    supplier_resampled.to_csv(
-        "data/processed/resampled_supplier_data.csv",
-        index=False
-    )
+    supplier_resampled.to_csv("data/processed/resampled_supplier_data.csv", index=False)
 
     print("=" * 50)
     print("Resampling completed successfully.")
