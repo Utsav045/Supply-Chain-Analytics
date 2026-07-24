@@ -2,7 +2,6 @@
 
 import pandas as pd
 
-
 REQUIRED_COLUMNS = {
     "date",
     "sku_id",
@@ -55,9 +54,7 @@ def validate_forecasting_dataframe(
         )
 
     if dataframe.empty:
-        raise ForecastingDataValidationError(
-            "Forecasting dataset cannot be empty."
-        )
+        raise ForecastingDataValidationError("Forecasting dataset cannot be empty.")
 
     missing_columns = REQUIRED_COLUMNS.difference(dataframe.columns)
 
@@ -75,15 +72,9 @@ def validate_forecasting_dataframe(
     )
 
     if validated["date"].isna().any():
-        raise ForecastingDataValidationError(
-            "The date column contains invalid values."
-        )
+        raise ForecastingDataValidationError("The date column contains invalid values.")
 
-    validated["sku_id"] = (
-        validated["sku_id"]
-        .astype("string")
-        .str.strip()
-    )
+    validated["sku_id"] = validated["sku_id"].astype("string").str.strip()
 
     if validated["sku_id"].isna().any():
         raise ForecastingDataValidationError(
@@ -91,9 +82,7 @@ def validate_forecasting_dataframe(
         )
 
     if validated["sku_id"].eq("").any():
-        raise ForecastingDataValidationError(
-            "The sku_id column contains empty values."
-        )
+        raise ForecastingDataValidationError("The sku_id column contains empty values.")
 
     for column in NUMERIC_COLUMNS.intersection(validated.columns):
         validated[column] = pd.to_numeric(
@@ -119,14 +108,9 @@ def validate_forecasting_dataframe(
             column,
         )
 
-    for column in {"category", "location_id"}.intersection(
-        validated.columns
-    ):
+    for column in {"category", "location_id"}.intersection(validated.columns):
         validated[column] = (
-            validated[column]
-            .astype("string")
-            .str.strip()
-            .replace("", pd.NA)
+            validated[column].astype("string").str.strip().replace("", pd.NA)
         )
 
     duplicate_keys = ["date", "sku_id"]
@@ -157,21 +141,19 @@ def normalize_boolean_column(
     Supported values include true, false, yes, no, 1 and 0.
     """
     mapping = {
-            "1": True,
-            "0": False,
-            "true": True,
-            "false": False,
-            "yes": True,
-            "no": False,
-            "y": True,
-            "n": False,
-        }
+        "1": True,
+        "0": False,
+        "true": True,
+        "false": False,
+        "yes": True,
+        "no": False,
+        "y": True,
+        "n": False,
+    }
 
     normalized = series.map(
         lambda value: (
-            mapping.get(str(value).strip().lower())
-            if pd.notna(value)
-            else pd.NA
+            mapping.get(str(value).strip().lower()) if pd.notna(value) else pd.NA
         )
     )
 

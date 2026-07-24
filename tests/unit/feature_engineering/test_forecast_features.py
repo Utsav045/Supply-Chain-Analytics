@@ -68,13 +68,9 @@ def test_rolling_features_exclude_current_demand(
     """Rolling statistics should use only previous observations."""
     result = create_forecasting_features(forecasting_data)
 
-    expected_mean = np.mean(
-        forecasting_data["demand"].iloc[0:7]
-    )
+    expected_mean = np.mean(forecasting_data["demand"].iloc[0:7])
 
-    assert result.iloc[7]["demand_rolling_mean_7"] == pytest.approx(
-        expected_mean
-    )
+    assert result.iloc[7]["demand_rolling_mean_7"] == pytest.approx(expected_mean)
 
 
 def test_inventory_ratio_uses_previous_demand(
@@ -84,13 +80,12 @@ def test_inventory_ratio_uses_previous_demand(
     result = create_forecasting_features(forecasting_data)
 
     expected_ratio = (
-        forecasting_data.iloc[1]["inventory_level"]
-        / forecasting_data.iloc[0]["demand"]
+        forecasting_data.iloc[1]["inventory_level"] / forecasting_data.iloc[0]["demand"]
     )
 
-    assert result.iloc[1][
-        "inventory_to_previous_demand_ratio"
-    ] == pytest.approx(expected_ratio)
+    assert result.iloc[1]["inventory_to_previous_demand_ratio"] == pytest.approx(
+        expected_ratio
+    )
 
 
 def test_price_features_are_created(
