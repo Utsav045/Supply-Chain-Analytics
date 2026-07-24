@@ -1,6 +1,7 @@
 """Utilities for building model-ready demand series."""
 
 import pandas as pd
+from pandas.tseries.frequencies import to_offset
 
 from src.forecasting.validation import (
     ForecastingDataValidationError,
@@ -25,22 +26,73 @@ def build_demand_series(
 
     Returns:
         Regular time-indexed forecasting dataset.
+
+    Raises:
+        ForecastingDataValidationError: If the selected series is invalid
+            or ambiguous.
     """
+    cleaned_sku_id = sku_id.strip()
+
+    if not cleaned_sku_id:
+        raise ForecastingDataValidationError(
+            "sku_id cannot be empty."
+        )
+
+    try:
+        to_offset(frequency)
+    except ValueError as exc:
+        raise ForecastingDataValidationError(
+            f"Invalid time-series frequency: {frequency}."
+        ) from exc
+
     validated = validate_forecasting_dataframe(dataframe)
 
     product_data = validated.loc[
-        validated["sku_id"] == sku_id
+        validated["sku_id"] == cleaned_sku_id
     ].copy()
 
-    if location_id is not None:
-        if "location_id" not in product_data.columns:
+    if product_data.empty:
+        raise ForecastingDataValidationError(
+            f"No observations were found for SKU '{cleaned_sku_id}'."
+        )
+
+    resolved_location: str | None = location_id
+
+    if "location_id" in product_data.columns:
+        available_locations = (
+            product_data["location_id"]
+            .dropna()
+            .astype(str)
+            .unique()
+        )
+
+        if location_id is None and len(available_locations) > 1:
             raise ForecastingDataValidationError(
-                "location_id was requested but is absent from the dataset."
+                "The selected product exists in multiple locations. "
+                "Specify location_id before building the demand series."
             )
 
-        product_data = product_data.loc[
-            product_data["location_id"] == location_id
-        ].copy()
+        if location_id is not None:
+            cleaned_location_id = location_id.strip()
+
+            if not cleaned_location_id:
+                raise ForecastingDataValidationError(
+                    "location_id cannot be empty."
+                )
+
+            product_data = product_data.loc[
+                product_data["location_id"] == cleaned_location_id
+            ].copy()
+
+            resolved_location = cleaned_location_id
+
+        elif len(available_locations) == 1:
+            resolved_location = str(available_locations[0])
+
+    elif location_id is not None:
+        raise ForecastingDataValidationError(
+            "location_id was requested but is absent from the dataset."
+        )
 
     if product_data.empty:
         raise ForecastingDataValidationError(
@@ -65,11 +117,18 @@ def build_demand_series(
     if "holiday" in product_data.columns:
         aggregation_rules["holiday"] = "max"
 
+    if "category" in product_data.columns:
+        aggregation_rules["category"] = "last"
+
     regular_data = product_data.resample(frequency).agg(
         aggregation_rules
     )
 
-    regular_data["demand"] = regular_data["demand"].fillna(0.0)
+    regular_data["demand"] = (
+        regular_data["demand"]
+        .fillna(0.0)
+        .astype(float)
+    )
 
     if "inventory_level" in regular_data.columns:
         regular_data["inventory_level"] = (
@@ -92,5 +151,27 @@ def build_demand_series(
                 .fillna(False)
                 .astype(bool)
             )
+
+    if "category" in regular_data.columns:
+        regular_data["category"] = (
+            regular_data["category"]
+            .ffill()
+            .bfill()
+        )
+
+    regular_data.insert(
+        loc=0,
+        column="sku_id",
+        value=cleaned_sku_id,
+    )
+
+    if resolved_location is not None:
+        regular_data.insert(
+            loc=1,
+            column="location_id",
+            value=resolved_location,
+        )
+
+    regular_data.index.name = "date"
 
     return regular_data
