@@ -18,13 +18,14 @@ from src.forecasting.model_validation import (
 def daily_demand() -> pd.Series:
     """Return a valid daily demand series."""
     return pd.Series(
-        data=[10, 12, 15, 11, 18, 20, 16],
+        data=[10.0, 12.0, 15.0, 11.0, 18.0, 20.0, 16.0],
         index=pd.date_range(
             start="2026-01-01",
             periods=7,
             freq="D",
         ),
         name="demand",
+        dtype=float,
     )
 
 
