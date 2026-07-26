@@ -1,5 +1,7 @@
 """Validation utilities for model-ready time-series inputs."""
 
+from typing import cast
+
 import numpy as np
 import pandas as pd
 
@@ -26,8 +28,10 @@ def infer_series_frequency(
     if not isinstance(index, pd.DatetimeIndex):
         raise ModelInputValidationError("Frequency inference requires a DatetimeIndex.")
 
-    if index.freq is not None:
-        return index.freqstr
+    stored_frequency = index.freqstr
+
+    if stored_frequency is not None:
+        return stored_frequency
 
     if len(index) < 3:
         raise ModelInputValidationError(
@@ -36,18 +40,18 @@ def infer_series_frequency(
         )
 
     try:
-        frequency = pd.infer_freq(index)
+        inferred_frequency = pd.infer_freq(index)
     except ValueError as exc:
         raise ModelInputValidationError(
             "Unable to infer the time-series frequency."
         ) from exc
 
-    if frequency is None:
+    if inferred_frequency is None:
         raise ModelInputValidationError(
             "The demand series must have a regular time interval."
         )
 
-    return frequency
+    return inferred_frequency
 
 
 def validate_demand_series(
@@ -87,27 +91,36 @@ def validate_demand_series(
     if not isinstance(series.index, pd.DatetimeIndex):
         raise ModelInputValidationError("Demand series must use a DatetimeIndex.")
 
-    if series.index.has_duplicates:
+    datetime_index = pd.DatetimeIndex(series.index)
+
+    if datetime_index.has_duplicates:
         raise ModelInputValidationError("Demand series contains duplicate timestamps.")
 
-    validated = series.sort_index().copy()
+    validated = series.copy()
+    validated.index = datetime_index
+    validated = validated.sort_index()
 
     if len(validated) < minimum_observations:
         raise ModelInputValidationError(
             f"At least {minimum_observations} observations are required."
         )
 
-    validated = pd.to_numeric(
+    numeric_series = pd.to_numeric(
         validated,
         errors="coerce",
     )
 
-    if validated.isna().any():
+    if not isinstance(numeric_series, pd.Series):
+        raise ModelInputValidationError(
+            "Demand input could not be converted to a pandas Series."
+        )
+
+    if numeric_series.isna().any():
         raise ModelInputValidationError(
             "Demand series contains missing or non-numeric values."
         )
 
-    demand_values = validated.to_numpy(dtype=float)
+    demand_values = numeric_series.to_numpy(dtype=float)
 
     if not np.isfinite(demand_values).all():
         raise ModelInputValidationError("Demand series contains infinite values.")
@@ -115,12 +128,18 @@ def validate_demand_series(
     if (demand_values < 0).any():
         raise ModelInputValidationError("Demand values cannot be negative.")
 
-    infer_series_frequency(validated.index)
+    validated_series = cast(
+        pd.Series,
+        numeric_series.astype(float),
+    )
 
-    validated = validated.astype(float)
-    validated.name = series.name or "demand"
+    validated_series.index = pd.DatetimeIndex(validated_series.index)
 
-    return validated
+    infer_series_frequency(pd.DatetimeIndex(validated_series.index))
+
+    validated_series.name = series.name or "demand"
+
+    return validated_series
 
 
 def validate_exogenous_features(
@@ -146,6 +165,11 @@ def validate_exogenous_features(
     if not isinstance(dataframe, pd.DataFrame):
         raise ModelInputValidationError("External features must be a pandas DataFrame.")
 
+    if not isinstance(expected_index, pd.DatetimeIndex):
+        raise ModelInputValidationError(
+            "Expected feature dates must use a DatetimeIndex."
+        )
+
     if dataframe.empty:
         raise ModelInputValidationError("External feature data cannot be empty.")
 
@@ -157,34 +181,44 @@ def validate_exogenous_features(
     if not isinstance(dataframe.index, pd.DatetimeIndex):
         raise ModelInputValidationError("External features must use a DatetimeIndex.")
 
-    if dataframe.index.has_duplicates:
+    datetime_index = pd.DatetimeIndex(dataframe.index)
+
+    if datetime_index.has_duplicates:
         raise ModelInputValidationError(
             "External features contain duplicate timestamps."
         )
 
-    validated = dataframe.sort_index().copy()
+    validated = dataframe.copy()
+    validated.index = datetime_index
+    validated = validated.sort_index()
 
     if not validated.index.equals(expected_index):
         raise ModelInputValidationError(
             "External feature dates must match the demand-series dates."
         )
 
-    validated = validated.apply(
-        pd.to_numeric,
-        errors="coerce",
+    numeric_features = cast(
+        pd.DataFrame,
+        validated.apply(
+            pd.to_numeric,
+            errors="coerce",
+        ),
     )
 
-    if validated.isna().any().any():
+    if numeric_features.isna().any().any():
         raise ModelInputValidationError(
             "External features contain missing or non-numeric values."
         )
 
-    feature_values = validated.to_numpy(dtype=float)
+    feature_values = numeric_features.to_numpy(dtype=float)
 
     if not np.isfinite(feature_values).all():
         raise ModelInputValidationError("External features contain infinite values.")
 
-    return validated.astype(float)
+    return cast(
+        pd.DataFrame,
+        numeric_features.astype(float),
+    )
 
 
 def validate_forecast_horizon(
