@@ -12,30 +12,23 @@ def create_forecasting_features(
 
     Features derived from demand use only previous observations to
     prevent target leakage.
-
-    Args:
-        dataframe: Regular time-indexed demand dataset.
-
-    Returns:
-        Dataset containing forecasting features.
-
-    Raises:
-        ValueError: If the dataset is empty, lacks demand, or does not
-            use a DatetimeIndex.
     """
+    if not isinstance(dataframe, pd.DataFrame):
+        raise TypeError("Forecasting input must be a pandas DataFrame.")
+
     if not isinstance(dataframe.index, pd.DatetimeIndex):
         raise TypeError("Forecasting features require a DatetimeIndex.")
 
     if dataframe.empty:
         raise ValueError("Forecasting feature input cannot be empty.")
 
-    if not isinstance(dataframe, pd.DataFrame):
-        raise TypeError("Forecasting input must be a pandas DataFrame.")
-
     if "demand" not in dataframe.columns:
         raise ValueError("Forecasting features require a demand column.")
 
     featured = dataframe.sort_index().copy()
+
+    datetime_index = pd.DatetimeIndex(featured.index)
+    featured.index = datetime_index
 
     featured["demand"] = pd.to_numeric(
         featured["demand"],
@@ -48,12 +41,12 @@ def create_forecasting_features(
     if (featured["demand"] < 0).any():
         raise ValueError("Demand cannot contain negative values.")
 
-    featured["day_of_week"] = featured.index.dayofweek
-    featured["day_of_month"] = featured.index.day
-    featured["week_of_year"] = featured.index.isocalendar().week.astype(int)
-    featured["month"] = featured.index.month
-    featured["quarter"] = featured.index.quarter
-    featured["is_weekend"] = (featured.index.dayofweek >= 5).astype(int)
+    featured["day_of_week"] = datetime_index.dayofweek
+    featured["day_of_month"] = datetime_index.day
+    featured["week_of_year"] = datetime_index.isocalendar().week.astype(int)
+    featured["month"] = datetime_index.month
+    featured["quarter"] = datetime_index.quarter
+    featured["is_weekend"] = (datetime_index.dayofweek >= 5).astype(int)
 
     shifted_demand = featured["demand"].shift(1)
 
@@ -96,12 +89,10 @@ def create_forecasting_features(
         )
 
         featured["price_change"] = featured["price"].pct_change(fill_method=None)
-
         featured["price_lag_1"] = featured["price"].shift(1)
 
     if "promotion" in featured.columns:
         featured["promotion"] = featured["promotion"].fillna(False).astype(int)
-
         featured["promotion_lag_1"] = featured["promotion"].shift(1)
 
     if "holiday" in featured.columns:

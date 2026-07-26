@@ -36,18 +36,7 @@ class ForecastingDataValidationError(ValueError):
 def validate_forecasting_dataframe(
     dataframe: pd.DataFrame,
 ) -> pd.DataFrame:
-    """
-    Validate and standardize the complete forecasting dataset.
-
-    Args:
-        dataframe: Raw or processed supply-chain dataset.
-
-    Returns:
-        A validated copy of the forecasting dataset.
-
-    Raises:
-        ForecastingDataValidationError: If validation fails.
-    """
+    """Validate and standardize the forecasting dataset."""
     if not isinstance(dataframe, pd.DataFrame):
         raise ForecastingDataValidationError(
             "Forecasting input must be a pandas DataFrame."
@@ -69,6 +58,7 @@ def validate_forecasting_dataframe(
     validated["date"] = pd.to_datetime(
         validated["date"],
         errors="coerce",
+        format="mixed",
     )
 
     if validated["date"].isna().any():
@@ -108,7 +98,10 @@ def validate_forecasting_dataframe(
             column,
         )
 
-    for column in {"category", "location_id"}.intersection(validated.columns):
+    for column in {
+        "category",
+        "location_id",
+    }.intersection(validated.columns):
         validated[column] = (
             validated[column].astype("string").str.strip().replace("", pd.NA)
         )
@@ -135,11 +128,7 @@ def normalize_boolean_column(
     series: pd.Series,
     column_name: str,
 ) -> pd.Series:
-    """
-    Convert common binary representations to nullable booleans.
-
-    Supported values include true, false, yes, no, 1 and 0.
-    """
+    """Convert common binary representations to nullable booleans."""
     mapping = {
         "1": True,
         "0": False,
