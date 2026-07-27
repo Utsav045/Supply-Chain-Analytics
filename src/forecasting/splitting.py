@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from math import ceil
+from typing import cast
 
 import pandas as pd
 
@@ -110,9 +111,14 @@ def chronological_train_test_split(
     test_exogenous: pd.DataFrame | None = None
 
     if exogenous is not None:
+        validated_index = cast(
+            pd.DatetimeIndex,
+            validated_series.index,
+        )
+
         validated_exogenous = validate_exogenous_features(
             exogenous,
-            expected_index=validated_series.index,
+            expected_index=validated_index,
         )
 
         train_exogenous = validated_exogenous.iloc[:train_size].copy()
