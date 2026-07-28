@@ -5,7 +5,7 @@ import pandas as pd
 
 class RollingFeatureGenerator:
     """
-    Service class for generating rolling statistics features for time-series 
+    Service class for generating rolling statistics features for time-series
     forecasting.
     """
 
@@ -63,7 +63,7 @@ class RollingFeatureGenerator:
         for col, windows in self.rolling_config.items():
             for window in windows:
                 # pandas rolling object
-                # Note: We can specify min_periods if desired, 
+                # Note: We can specify min_periods if desired,
                 # default is the window size
                 rolling_obj = df_out[col].rolling(window=window)
 
