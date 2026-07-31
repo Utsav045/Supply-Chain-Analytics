@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import pandas as pd
-from scipy.stats import zscore
 
 # ==========================
 # Configuration
@@ -48,19 +47,27 @@ else:
     feature = FEATURE
 
 # ==========================
-# Handle Missing Values
+# Prepare Data
 # ==========================
-data = df[feature].fillna(df[feature].median())
+data = df[feature].fillna(df[feature].median()).astype(float)
 
 # ==========================
-# Calculate Z-score
+# Calculate Z-Score
 # ==========================
-df["z_score"] = zscore(data)
+mean = float(data.mean())
+std = float(data.std(ddof=0))
+
+if std == 0:
+    raise ValueError(f"Column '{feature}' has zero standard deviation.")
+
+z_scores = (data - mean) / std
+
+df["z_score"] = z_scores
 
 # ==========================
 # Detect Anomalies
 # ==========================
-df["anomaly"] = np.where(np.abs(df["z_score"]) > THRESHOLD, 1, 0)
+df["anomaly"] = (df["z_score"].abs() > THRESHOLD).astype(int)
 
 anomalies = df[df["anomaly"] == 1]
 
