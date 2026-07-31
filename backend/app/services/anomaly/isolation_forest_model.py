@@ -68,9 +68,7 @@ if __name__ == "__main__":
 
     model.save("models/anomaly/isolation_forest.pkl")
 
-    loaded_model = IsolationForestModel.load(
-        "models/anomaly/isolation_forest.pkl"
-    )
+    loaded_model = IsolationForestModel.load("models/anomaly/isolation_forest.pkl")
 
     anomalies = loaded_model.predict(values)
 
