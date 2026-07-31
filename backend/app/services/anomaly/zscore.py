@@ -9,9 +9,7 @@ import pandas as pd
 DATASET = "data/processed/clean_sales_data.csv"
 OUTPUT = "data/processed/zscore_anomalies.csv"
 
-# Set to None for automatic feature selection
 FEATURE = None
-
 THRESHOLD = 3
 
 # ==========================
@@ -36,11 +34,7 @@ if not numeric_columns:
 if FEATURE is None:
     ignore = ["order_id", "customer_id", "product_id", "supplier_id", "id"]
     candidates = [c for c in numeric_columns if c.lower() not in ignore]
-
-    if candidates:
-        feature = candidates[0]
-    else:
-        feature = numeric_columns[0]
+    feature = candidates[0] if candidates else numeric_columns[0]
 else:
     if FEATURE not in df.columns:
         raise ValueError(f"Column '{FEATURE}' not found.")
@@ -51,18 +45,18 @@ else:
 # ==========================
 data = df[feature].fillna(df[feature].median()).astype(float)
 
-# ==========================
-# Calculate Z-Score
-# ==========================
 mean = float(data.mean())
 std = float(data.std(ddof=0))
 
 if std == 0:
     raise ValueError(f"Column '{feature}' has zero standard deviation.")
 
+# ==========================
+# Calculate Z-Score
+# ==========================
 z_scores = (data - mean) / std
 
-df["z_score"] = z_scores
+df["z_score"] = pd.Series(z_scores, index=df.index, dtype=float)
 
 # ==========================
 # Detect Anomalies
