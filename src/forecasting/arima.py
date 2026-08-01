@@ -139,17 +139,44 @@ class ARIMAForecaster(BaseForecaster):
                 expected_index=validated_index,
             )
 
+        trend: str | None = None
+
+        if validated_exogenous is not None:
+            exogenous_values = validated_exogenous.to_numpy(dtype=float)
+
+            constant_columns = np.all(
+                np.isclose(
+                    exogenous_values,
+                    exogenous_values[0],
+                ),
+                axis=0,
+            )
+
+            nonzero_columns = ~np.isclose(
+                exogenous_values[0],
+                0.0,
+            )
+
+            has_nonzero_constant_column = bool(
+                np.any(constant_columns & nonzero_columns)
+            )
+
+            if has_nonzero_constant_column:
+                trend = "n"
+
         try:
             model = ARIMA(
                 endog=validated_series,
                 exog=validated_exogenous,
                 order=self.config.order,
+                trend=trend,
                 enforce_stationarity=(self.config.enforce_stationarity),
                 enforce_invertibility=(self.config.enforce_invertibility),
                 missing="raise",
             )
 
             result = model.fit()
+
         except (
             ValueError,
             TypeError,
@@ -162,7 +189,9 @@ class ARIMAForecaster(BaseForecaster):
         self._result = result
 
         if validated_exogenous is not None:
-            self._exogenous_columns = tuple(validated_exogenous.columns)
+            self._exogenous_columns = tuple(
+                str(column) for column in validated_exogenous.columns
+            )
         else:
             self._exogenous_columns = ()
 
@@ -232,15 +261,21 @@ class ARIMAForecaster(BaseForecaster):
             raise RuntimeError("The ARIMA model must be fitted before prediction.")
 
         validated_horizon = validate_forecast_horizon(horizon)
+
         validated_confidence = validate_confidence_level(confidence_level)
 
         if self._history is None or self._frequency is None or self._result is None:
             raise RuntimeError("The fitted ARIMA model state is incomplete.")
 
+        history_index = cast(
+            pd.DatetimeIndex,
+            self._history.index,
+        )
+
         offset = to_offset(self._frequency)
 
         future_index = pd.date_range(
-            start=self._history.index[-1] + offset,
+            start=history_index[-1] + offset,
             periods=validated_horizon,
             freq=offset,
         )
@@ -257,6 +292,7 @@ class ARIMAForecaster(BaseForecaster):
             )
 
             summary = prediction_result.summary_frame(alpha=1 - validated_confidence)
+
         except (
             ValueError,
             TypeError,
