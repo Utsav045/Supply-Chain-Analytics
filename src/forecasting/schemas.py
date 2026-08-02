@@ -51,6 +51,16 @@ class ForecastRequest(BaseModel):
     confidence_level: float = Field(default=0.95, gt=0, lt=1)
 
 
+class ForecastExecutionRequest(BaseModel):
+    """Represent a complete API forecasting operation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    forecast: ForecastRequest
+    observations: list[DemandObservation] = Field(min_length=4)
+    persist_model: bool = False
+
+
 class ForecastPoint(BaseModel):
     """Represent one predicted demand value."""
 
@@ -80,3 +90,4 @@ class ForecastResponse(BaseModel):
     generated_at: datetime
     metrics: ForecastMetrics | None = None
     forecasts: list[ForecastPoint]
+    model_artifact_id: str | None = None
