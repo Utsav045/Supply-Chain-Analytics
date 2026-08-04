@@ -1,5 +1,5 @@
-
 import os
+
 import pandas as pd
 
 
@@ -33,11 +33,7 @@ def convert_to_datetime(df, column):
     """
     Convert a column to datetime format.
     """
-    df[column] = pd.to_datetime(
-        df[column],
-        dayfirst=True,
-        errors="coerce"
-    )
+    df[column] = pd.to_datetime(df[column], dayfirst=True, errors="coerce")
 
     return df
 
@@ -60,9 +56,7 @@ def fill_missing_values(df):
 
         if pd.api.types.is_numeric_dtype(df[column]):
 
-            df[column] = df[column].fillna(
-                df[column].median()
-            )
+            df[column] = df[column].fillna(df[column].median())
 
         else:
 
@@ -70,9 +64,7 @@ def fill_missing_values(df):
 
             if not mode.empty:
 
-                df[column] = df[column].fillna(
-                    mode.iloc[0]
-                )
+                df[column] = df[column].fillna(mode.iloc[0])
 
     return df
 
@@ -82,15 +74,10 @@ def interpolate_numeric(df):
     Interpolate numeric columns.
     """
 
-    numeric_columns = df.select_dtypes(
-        include=["number"]
-    ).columns
+    numeric_columns = df.select_dtypes(include=["number"]).columns
 
     df[numeric_columns] = (
-        df[numeric_columns]
-        .interpolate(method="linear")
-        .bfill()
-        .ffill()
+        df[numeric_columns].interpolate(method="linear").bfill().ffill()
     )
 
     return df
@@ -100,9 +87,7 @@ def get_numeric_columns(df):
     """
     Return numeric column names.
     """
-    return df.select_dtypes(
-        include=["number"]
-    ).columns.tolist()
+    return df.select_dtypes(include=["number"]).columns.tolist()
 
 
 def print_shape(df, name):
@@ -158,18 +143,11 @@ def save_processed_dataset(df, filename):
     Save processed dataset.
     """
 
-    output_path = os.path.join(
-        "data",
-        "processed",
-        filename
-    )
+    output_path = os.path.join("data", "processed", filename)
 
     create_directory("data/processed")
 
-    df.to_csv(
-        output_path,
-        index=False
-    )
+    df.to_csv(output_path, index=False)
 
     print(f"Saved : {output_path}")
 
@@ -179,10 +157,6 @@ def load_processed_dataset(filename):
     Load processed dataset.
     """
 
-    file_path = os.path.join(
-        "data",
-        "processed",
-        filename
-    )
+    file_path = os.path.join("data", "processed", filename)
 
     return pd.read_csv(file_path)
