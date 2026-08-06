@@ -19,6 +19,7 @@ from src.forecasting.model_validation import (
 from src.forecasting.moving_average import (
     MovingAverageForecaster,
 )
+from src.forecasting.persistence import ModelStore
 from src.forecasting.schemas import ForecastRequest
 from src.forecasting.series_builder import build_demand_series
 
@@ -88,6 +89,7 @@ class ForecastingService:
             ]
             | None
         ) = None,
+        model_store: ModelStore | None = None,
         primary_metric: str = "rmse",
         backtest_ratio: float = 0.25,
         frequency: str = "D",
@@ -132,6 +134,7 @@ class ForecastingService:
         self._primary_metric = primary_metric
         self._backtest_ratio = validated_ratio
         self._frequency = frequency.strip()
+        self._model_store = model_store
 
     @property
     def available_models(self) -> tuple[str, ...]:
@@ -243,6 +246,7 @@ class ForecastingService:
         self,
         dataframe: pd.DataFrame,
         request: ForecastRequest,
+        persist_model: bool = False,
     ) -> ForecastingServiceResult:
         """
         Generate a production-ready demand forecast.
@@ -298,6 +302,26 @@ class ForecastingService:
 
         selected_backtest = selection.backtests[selection.selected_model_name]
 
+        model_artifact_id: str | None = None
+
+        if persist_model:
+            if self._model_store is None:
+                raise ModelInputValidationError(
+                    "Model persistence was requested, but no "
+                    "ModelStore is configured."
+                )
+
+            artifact = self._model_store.save(
+                model=selection.selected_model,
+                sku_id=request.sku_id,
+                location_id=self._resolve_location(
+                    series_data,
+                    request.location_id,
+                ),
+            )
+
+            model_artifact_id = artifact.artifact_id
+
         return ForecastingServiceResult(
             sku_id=request.sku_id.strip(),
             location_id=self._resolve_location(
@@ -310,4 +334,5 @@ class ForecastingService:
             metrics=dict(selected_backtest.metrics),
             forecasts=forecast.copy(),
             selected_model=selection.selected_model,
+            model_artifact_id=model_artifact_id,
         )

@@ -185,3 +185,32 @@ def test_available_models_include_auto(
         "moving_average_2",
         "moving_average_5",
     )
+
+
+def test_service_can_persist_selected_model(
+    tmp_path,
+    historical_data: pd.DataFrame,
+) -> None:
+    """The selected model should be saved when requested."""
+    from src.forecasting.persistence import ModelStore
+
+    service = ForecastingService(
+        model_factories={
+            "moving_average_2": (lambda: MovingAverageForecaster(window=2)),
+        },
+        model_store=ModelStore(tmp_path),
+    )
+
+    result = service.forecast(
+        historical_data,
+        ForecastRequest(
+            sku_id="SKU-001",
+            location_id="LAGOS-01",
+            forecast_horizon=2,
+        ),
+        persist_model=True,
+    )
+
+    assert result.model_artifact_id is not None
+
+    assert (tmp_path / f"{result.model_artifact_id}.joblib").is_file()
