@@ -3,6 +3,8 @@ name = "isaac-supply-chain-analytics"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.141.1",
+    "joblib>=1.5.3",
     "numpy>=2.5.1",
     "pandas>=3.0.5",
     "pydantic>=2.13.4",
@@ -13,6 +15,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=26.5.1",
+    "httpx>=0.28.1",
     "mypy>=2.3.0",
     "pandas-stubs>=3.0.3.260530",
     "pytest>=9.1.1",
@@ -40,4 +43,8 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["statsmodels.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["joblib", "joblib.*"]
 ignore_missing_imports = true
