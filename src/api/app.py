@@ -16,6 +16,18 @@ def create_app() -> FastAPI:
     application.include_router(forecasting_router)
 
     @application.get(
+        "/",
+        tags=["system"],
+    )
+    def root() -> dict[str, str]:
+        """Return basic API information."""
+        return {
+            "message": "Supply Chain Analytics API",
+            "status": "running",
+            "documentation": "/docs",
+        }
+
+    @application.get(
         "/health",
         tags=["system"],
     )
