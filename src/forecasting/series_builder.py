@@ -34,9 +34,7 @@ def build_demand_series(
     cleaned_sku_id = sku_id.strip()
 
     if not cleaned_sku_id:
-        raise ForecastingDataValidationError(
-            "sku_id cannot be empty."
-        )
+        raise ForecastingDataValidationError("sku_id cannot be empty.")
 
     try:
         to_offset(frequency)
@@ -47,9 +45,7 @@ def build_demand_series(
 
     validated = validate_forecasting_dataframe(dataframe)
 
-    product_data = validated.loc[
-        validated["sku_id"] == cleaned_sku_id
-    ].copy()
+    product_data = validated.loc[validated["sku_id"] == cleaned_sku_id].copy()
 
     if product_data.empty:
         raise ForecastingDataValidationError(
@@ -59,12 +55,7 @@ def build_demand_series(
     resolved_location: str | None = location_id
 
     if "location_id" in product_data.columns:
-        available_locations = (
-            product_data["location_id"]
-            .dropna()
-            .astype(str)
-            .unique()
-        )
+        available_locations = product_data["location_id"].dropna().astype(str).unique()
 
         if location_id is None and len(available_locations) > 1:
             raise ForecastingDataValidationError(
@@ -76,13 +67,10 @@ def build_demand_series(
             cleaned_location_id = location_id.strip()
 
             if not cleaned_location_id:
-                raise ForecastingDataValidationError(
-                    "location_id cannot be empty."
-                )
+                raise ForecastingDataValidationError("location_id cannot be empty.")
 
             product_data = product_data.loc[
-                product_data["location_id"]
-                == cleaned_location_id
+                product_data["location_id"] == cleaned_location_id
             ].copy()
 
             resolved_location = cleaned_location_id
@@ -100,88 +88,47 @@ def build_demand_series(
             "No observations match the selected product and location."
         )
 
-    product_data = (
-        product_data
-        .set_index("date")
-        .sort_index()
-    )
+    product_data = product_data.set_index("date").sort_index()
 
     regular_data = (
-        product_data["demand"]
-        .resample(frequency)
-        .sum()
-        .to_frame(name="demand")
+        product_data["demand"].resample(frequency).sum().to_frame(name="demand")
     )
 
     if "inventory_level" in product_data.columns:
         regular_data["inventory_level"] = (
-            product_data["inventory_level"]
-            .resample(frequency)
-            .last()
+            product_data["inventory_level"].resample(frequency).last()
         )
 
     if "price" in product_data.columns:
-        regular_data["price"] = (
-            product_data["price"]
-            .resample(frequency)
-            .mean()
-        )
+        regular_data["price"] = product_data["price"].resample(frequency).mean()
 
     if "promotion" in product_data.columns:
-        regular_data["promotion"] = (
-            product_data["promotion"]
-            .resample(frequency)
-            .max()
-        )
+        regular_data["promotion"] = product_data["promotion"].resample(frequency).max()
 
     if "holiday" in product_data.columns:
-        regular_data["holiday"] = (
-            product_data["holiday"]
-            .resample(frequency)
-            .max()
-        )
+        regular_data["holiday"] = product_data["holiday"].resample(frequency).max()
 
     if "category" in product_data.columns:
-        regular_data["category"] = (
-            product_data["category"]
-            .resample(frequency)
-            .last()
-        )
+        regular_data["category"] = product_data["category"].resample(frequency).last()
 
-    regular_data["demand"] = (
-        regular_data["demand"]
-        .fillna(0.0)
-        .astype(float)
-    )
+    regular_data["demand"] = regular_data["demand"].fillna(0.0).astype(float)
 
     if "inventory_level" in regular_data.columns:
         regular_data["inventory_level"] = (
-            regular_data["inventory_level"]
-            .ffill()
-            .bfill()
+            regular_data["inventory_level"].ffill().bfill()
         )
 
     if "price" in regular_data.columns:
-        regular_data["price"] = (
-            regular_data["price"]
-            .ffill()
-            .bfill()
-        )
+        regular_data["price"] = regular_data["price"].ffill().bfill()
 
     for binary_column in ("promotion", "holiday"):
         if binary_column in regular_data.columns:
             regular_data[binary_column] = (
-                regular_data[binary_column]
-                .fillna(False)
-                .astype(bool)
+                regular_data[binary_column].fillna(False).astype(bool)
             )
 
     if "category" in regular_data.columns:
-        regular_data["category"] = (
-            regular_data["category"]
-            .ffill()
-            .bfill()
-        )
+        regular_data["category"] = regular_data["category"].ffill().bfill()
 
     regular_data.insert(
         loc=0,
