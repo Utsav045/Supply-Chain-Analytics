@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.metrics import (
     mean_absolute_error,
-    mean_squared_error,
     mean_absolute_percentage_error,
+    mean_squared_error,
     r2_score,
 )
 
@@ -54,6 +54,7 @@ def main():
     metrics = calculate_metrics(y_true, y_pred)
 
     print_metrics(metrics)
+
 
 if __name__ == "__main__":
     main()
