@@ -3,9 +3,6 @@ import os
 import numpy as np
 import pandas as pd
 
-# ==========================
-# Configuration
-# ==========================
 
 DATASET = "data/processed/clean_sales_data.csv"
 OUTPUT = "data/processed/iqr_anomalies.csv"
@@ -13,80 +10,109 @@ OUTPUT = "data/processed/iqr_anomalies.csv"
 FEATURE = None
 MULTIPLIER = 1.5
 
-# ==========================
-# Load Dataset
-# ==========================
 
-if not os.path.exists(DATASET):
-    raise FileNotFoundError(f"Dataset not found: {DATASET}")
+def detect_anomalies(
+    df: pd.DataFrame,
+    multiplier: float = MULTIPLIER,
+) -> pd.DataFrame:
+    """
+    Detect anomalies using the IQR method.
 
-df = pd.read_csv(DATASET)
+    Args:
+        df: Input DataFrame.
+        multiplier: IQR multiplier.
 
-if df.empty:
-    raise ValueError("Dataset is empty.")
+    Returns:
+        DataFrame with an 'anomaly' column.
+    """
 
-# ==========================
-# Select Feature
-# ==========================
+    if df.empty:
+        raise ValueError("Dataset is empty.")
 
-numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+    result = df.copy()
 
-if not numeric_columns:
-    raise ValueError("No numeric columns found.")
+    numeric_columns = result.select_dtypes(
+        include=[np.number]
+    ).columns.tolist()
 
-if FEATURE is None:
-    ignore = ["order_id", "customer_id", "product_id", "supplier_id", "id"]
-    candidates = [c for c in numeric_columns if c.lower() not in ignore]
-    feature = candidates[0] if candidates else numeric_columns[0]
-else:
-    if FEATURE not in df.columns:
-        raise ValueError(f"Column '{FEATURE}' not found.")
-    feature = FEATURE
+    if not numeric_columns:
+        raise ValueError("No numeric columns found.")
 
-# ==========================
-# Prepare Data
-# ==========================
+    if FEATURE is None:
+        ignore = [
+            "order_id",
+            "customer_id",
+            "product_id",
+            "supplier_id",
+            "id",
+        ]
 
-data = df[feature].fillna(df[feature].median()).astype(float)
+        candidates = [
+            column
+            for column in numeric_columns
+            if column.lower() not in ignore
+        ]
 
-# ==========================
-# Calculate IQR
-# ==========================
+        feature = (
+            candidates[0]
+            if candidates
+            else numeric_columns[0]
+        )
+    else:
+        if FEATURE not in result.columns:
+            raise ValueError(
+                f"Column '{FEATURE}' not found."
+            )
 
-q1 = data.quantile(0.25)
-q3 = data.quantile(0.75)
+        feature = FEATURE
 
-iqr = q3 - q1
+    data = result[feature].fillna(
+        result[feature].median()
+    ).astype(float)
 
-lower_bound = q1 - (MULTIPLIER * iqr)
-upper_bound = q3 + (MULTIPLIER * iqr)
+    q1 = data.quantile(0.25)
+    q3 = data.quantile(0.75)
 
-# ==========================
-# Detect Anomalies
-# ==========================
+    iqr = q3 - q1
 
-df["anomaly"] = ((data < lower_bound) | (data > upper_bound)).astype(int)
+    lower_bound = q1 - (multiplier * iqr)
+    upper_bound = q3 + (multiplier * iqr)
 
-anomalies = df[df["anomaly"] == 1]
+    result["anomaly"] = (
+        (data < lower_bound)
+        | (data > upper_bound)
+    ).astype(int)
 
-# ==========================
-# Save Results
-# ==========================
+    return result
 
-os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
-anomalies.to_csv(OUTPUT, index=False)
 
-# ==========================
-# Print Summary
-# ==========================
+if __name__ == "__main__":
+    if not os.path.exists(DATASET):
+        raise FileNotFoundError(
+            f"Dataset not found: {DATASET}"
+        )
 
-print("=" * 45)
-print("IQR Anomaly Detection")
-print("=" * 45)
-print(f"Dataset        : {DATASET}")
-print(f"Feature        : {feature}")
-print(f"IQR Multiplier : {MULTIPLIER}")
-print(f"Total Records  : {len(df)}")
-print(f"Anomalies      : {len(anomalies)}")
-print(f"Output File    : {OUTPUT}")
-print("=" * 45)
+    dataframe = pd.read_csv(DATASET)
+
+    result = detect_anomalies(dataframe)
+
+    anomalies = result[result["anomaly"] == 1]
+
+    os.makedirs(
+        os.path.dirname(OUTPUT),
+        exist_ok=True,
+    )
+
+    anomalies.to_csv(
+        OUTPUT,
+        index=False,
+    )
+
+    print("=" * 45)
+    print("IQR Anomaly Detection")
+    print("=" * 45)
+    print(f"Dataset        : {DATASET}")
+    print(f"Total Records  : {len(result)}")
+    print(f"Anomalies      : {len(anomalies)}")
+    print(f"Output File    : {OUTPUT}")
+    print("=" * 45)
