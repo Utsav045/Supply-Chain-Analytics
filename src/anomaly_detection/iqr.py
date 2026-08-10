@@ -3,7 +3,6 @@ import os
 import numpy as np
 import pandas as pd
 
-
 DATASET = "data/processed/clean_sales_data.csv"
 OUTPUT = "data/processed/iqr_anomalies.csv"
 
@@ -31,9 +30,7 @@ def detect_anomalies(
 
     result = df.copy()
 
-    numeric_columns = result.select_dtypes(
-        include=[np.number]
-    ).columns.tolist()
+    numeric_columns = result.select_dtypes(include=[np.number]).columns.tolist()
 
     if not numeric_columns:
         raise ValueError("No numeric columns found.")
@@ -48,27 +45,17 @@ def detect_anomalies(
         ]
 
         candidates = [
-            column
-            for column in numeric_columns
-            if column.lower() not in ignore
+            column for column in numeric_columns if column.lower() not in ignore
         ]
 
-        feature = (
-            candidates[0]
-            if candidates
-            else numeric_columns[0]
-        )
+        feature = candidates[0] if candidates else numeric_columns[0]
     else:
         if FEATURE not in result.columns:
-            raise ValueError(
-                f"Column '{FEATURE}' not found."
-            )
+            raise ValueError(f"Column '{FEATURE}' not found.")
 
         feature = FEATURE
 
-    data = result[feature].fillna(
-        result[feature].median()
-    ).astype(float)
+    data = result[feature].fillna(result[feature].median()).astype(float)
 
     q1 = data.quantile(0.25)
     q3 = data.quantile(0.75)
@@ -78,19 +65,14 @@ def detect_anomalies(
     lower_bound = q1 - (multiplier * iqr)
     upper_bound = q3 + (multiplier * iqr)
 
-    result["anomaly"] = (
-        (data < lower_bound)
-        | (data > upper_bound)
-    ).astype(int)
+    result["anomaly"] = ((data < lower_bound) | (data > upper_bound)).astype(int)
 
     return result
 
 
 if __name__ == "__main__":
     if not os.path.exists(DATASET):
-        raise FileNotFoundError(
-            f"Dataset not found: {DATASET}"
-        )
+        raise FileNotFoundError(f"Dataset not found: {DATASET}")
 
     dataframe = pd.read_csv(DATASET)
 
