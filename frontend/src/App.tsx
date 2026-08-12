@@ -1,10 +1,7 @@
+import AppRouter from "./router/AppRouter";
+
 const App = () => {
-  return (
-    <div>
-      <h1>Supply Chain Analytics</h1>
-      <p>Frontend is working.</p>
-    </div>
-  );
+  return <AppRouter />;
 };
 
 export default App;
