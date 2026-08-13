@@ -1,13 +1,14 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import OrdersPage from "../features/orders/OrdersPage";
+import { BrowserRouter, useRoutes } from "react-router-dom";
+import routes from "./routes";
+
+const AppRoutes = () => {
+  return useRoutes(routes);
+};
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/orders" replace />} />
-        <Route path="/orders" element={<OrdersPage />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 };

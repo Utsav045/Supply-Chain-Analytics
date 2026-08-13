@@ -6,9 +6,19 @@ Aggregates and registers all individual API route modules.
 
 from fastapi import APIRouter
 
-from app.api.routes import anomaly, dashboard, forecast, health, orders
+from app.api.routes import (
+    anomaly,
+    dashboard,
+    forecast,
+    health,
+    inventory,
+    orders,
+    reports,
+    suppliers,
+)
 
 api_router = APIRouter()
+
 
 api_router.include_router(
     health.router,
@@ -38,4 +48,22 @@ api_router.include_router(
     orders.router,
     prefix="/orders",
     tags=["Orders"],
+)
+
+api_router.include_router(
+    suppliers.router,
+    prefix="/suppliers",
+    tags=["Suppliers"],
+)
+
+api_router.include_router(
+    inventory.router,
+    prefix="/inventory",
+    tags=["Inventory"],
+)
+
+api_router.include_router(
+    reports.router,
+    prefix="/reports",
+    tags=["Reports"],
 )
