@@ -1,1 +1,560 @@
+* {
+  box-sizing: border-box;
+}
 
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #f7f9fc;
+  color: #1f2937;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 220px;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 18px 12px;
+
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+
+  z-index: 100;
+}
+
+/* Brand */
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 4px 8px 24px;
+}
+
+.brand-icon {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 13px;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+
+  white-space: nowrap;
+}
+
+/* Navigation */
+
+.sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-link {
+  min-height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 0 11px;
+
+  border-radius: 7px;
+
+  color: #6b7280;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sidebar-link:hover {
+  background: #f3f6fb;
+  color: #374151;
+}
+
+.sidebar-link.active {
+  background: #2563eb;
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+.sidebar-link-icon {
+  width: 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+}
+
+/* Sidebar footer */
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+
+  border-top: 1px solid #f0f1f3;
+}
+
+.logout-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 9px 11px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #6b7280;
+
+  font-size: 12px;
+}
+
+.logout-button:hover {
+  background: #f3f6fb;
+  color: #374151;
+}
+
+/* =====================================================
+   MAIN APPLICATION AREA
+   ===================================================== */
+
+.app-layout {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-area {
+  min-height: 100vh;
+  margin-left: 220px;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.app-header {
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Header title */
+
+.header-title h1 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.header-title p {
+  margin: 4px 0 0;
+
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Header actions */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* =====================================================
+   SEARCH
+   ===================================================== */
+
+.header-search {
+  width: 210px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0 10px;
+
+  background: #f7f9fc;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+}
+
+.header-search-icon {
+  color: #9ca3af;
+  font-size: 17px;
+}
+
+.header-search input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #374151;
+  font-size: 12px;
+}
+
+.header-search input::placeholder {
+  color: #9ca3af;
+}
+
+/* =====================================================
+   DATE BUTTON
+   ===================================================== */
+
+.header-date {
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 11px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #4b5563;
+
+  font-size: 12px;
+}
+
+.header-date:hover {
+  background: #f7f9fc;
+}
+
+/* =====================================================
+   PROFILE
+   ===================================================== */
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding-left: 6px;
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-name {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #111827;
+}
+
+.profile-role {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+/* =====================================================
+   PAGE CONTENT
+   ===================================================== */
+
+.main-content {
+  min-height: calc(100vh - 72px);
+
+  padding: 28px 32px;
+
+  overflow-x: hidden;
+}
+
+/* =====================================================
+   RESPONSIVE — TABLET
+   ===================================================== */
+
+@media (max-width: 900px) {
+  .app-header {
+    padding: 0 24px;
+  }
+
+  .header-search {
+    width: 160px;
+  }
+
+  .main-content {
+    padding: 24px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE — MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+  .sidebar {
+    width: 72px;
+  }
+
+  .main-area {
+    margin-left: 72px;
+  }
+
+  .brand-name,
+  .sidebar-link span:last-child,
+  .logout-button span:last-child {
+    display: none;
+  }
+
+  .sidebar-brand {
+    justify-content: center;
+
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sidebar-link,
+  .logout-button {
+    justify-content: center;
+
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .app-header {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .header-title h1 {
+    font-size: 15px;
+  }
+
+  .header-title p {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .header-search {
+    width: 130px;
+  }
+
+  .header-date span:last-child {
+    display: none;
+  }
+
+  .profile-info {
+    display: none;
+  }
+
+  .main-content {
+    min-height: calc(100vh - 64px);
+    padding: 20px;
+  }
+}
+
+/* =========================
+   DASHBOARD
+   ========================= */
+
+.dashboard-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.dashboard-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.dashboard-heading h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.dashboard-heading p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* KPI cards */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  min-height: 132px;
+  padding: 18px 20px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.kpi-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-card-title {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.kpi-value {
+  margin-top: 12px;
+
+  color: #111827;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.kpi-change {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 12px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.kpi-change span {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.kpi-change.positive {
+  color: #16a34a;
+}
+
+.kpi-change.negative {
+  color: #dc2626;
+}
+
+/* Dashboard responsive */
+
+@media (max-width: 1100px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-heading h1 {
+    font-size: 21px;
+  }
+}
