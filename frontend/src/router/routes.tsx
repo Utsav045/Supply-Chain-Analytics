@@ -6,6 +6,7 @@ import DashboardPage from "../features/dashboard/DashboardPage";
 import InventoryPage from "../features/inventory/InventoryPage";
 import OrdersPage from "../features/orders/OrdersPage";
 import SuppliersPage from "../features/suppliers/SuppliersPage";
+import LogisticsPage from "../features/logistics/LogisticsPage";
 import Reports from "../pages/Reports";
 import Settings from "../pages/Settings";
 
@@ -33,6 +34,10 @@ const routes: RouteObject[] = [
       {
         path: "suppliers",
         element: <SuppliersPage />,
+      },
+      {
+        path: "logistics",
+        element: <LogisticsPage />,
       },
       {
         path: "reports",
