@@ -6,34 +6,15 @@ from pathlib import Path
 from typing import Annotated
 
 import pandas as pd
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status,
-)
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.forecasting.arima import ARIMAModelError
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.persistence import (
-    ModelPersistenceError,
-    ModelStore,
-)
-from src.forecasting.response_mapper import (
-    build_forecast_response,
-)
-from src.forecasting.schemas import (
-    ForecastExecutionRequest,
-    ForecastResponse,
-)
-from src.forecasting.validation import (
-    ForecastingDataValidationError,
-)
-from src.services.forecasting_service import (
-    ForecastingService,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.persistence import ModelPersistenceError, ModelStore
+from src.forecasting.response_mapper import build_forecast_response
+from src.forecasting.schemas import ForecastExecutionRequest, ForecastResponse
+from src.forecasting.validation import ForecastingDataValidationError
+from src.services.forecasting_service import ForecastingService
 
 LOGGER = logging.getLogger(__name__)
 

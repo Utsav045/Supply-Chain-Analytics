@@ -38,7 +38,7 @@ class ForecastBase(BaseModel):
         if v not in SUPPORTED_FORECAST_MODELS:
             supported = ", ".join(SUPPORTED_FORECAST_MODELS)
             raise ValueError(
-                f"Unsupported model name '{v}'. " f"Supported models are: {supported}"
+                f"Unsupported model name '{v}'. Supported models are: {supported}"
             )
         return v
 
@@ -77,7 +77,7 @@ class ForecastGenerationRequest(BaseModel):
     model_name: str = Field(
         default="arima",
         description=(
-            "The algorithm to use for forecasting " "(moving_average, arima, prophet)"
+            "The algorithm to use for forecasting (moving_average, arima, prophet)"
         ),
     )
 
@@ -88,7 +88,7 @@ class ForecastGenerationRequest(BaseModel):
         if v not in SUPPORTED_FORECAST_MODELS:
             supported = ", ".join(SUPPORTED_FORECAST_MODELS)
             raise ValueError(
-                f"Unsupported model name '{v}'. " f"Supported models are: {supported}"
+                f"Unsupported model name '{v}'. Supported models are: {supported}"
             )
         return v
 

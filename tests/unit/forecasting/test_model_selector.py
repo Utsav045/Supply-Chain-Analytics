@@ -2,16 +2,9 @@
 
 import pandas as pd
 import pytest
-
-from src.forecasting.model_selector import (
-    AutomaticModelSelector,
-)
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
+from src.forecasting.model_selector import AutomaticModelSelector
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.moving_average import MovingAverageForecaster
 
 
 @pytest.fixture

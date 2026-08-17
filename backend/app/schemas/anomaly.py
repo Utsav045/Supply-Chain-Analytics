@@ -106,8 +106,7 @@ class AnomalyDetectionRequest(BaseModel):
     method: str = Field(
         default="z_score",
         description=(
-            "The method to use for detecting anomalies "
-            "(z_score, iqr, isolation_forest)"
+            "The method to use for detecting anomalies (z_score, iqr, isolation_forest)"
         ),
     )
 

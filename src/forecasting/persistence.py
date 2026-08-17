@@ -107,7 +107,7 @@ class ModelStore:
 
         if not model.is_fitted:
             raise ModelPersistenceError(
-                "The forecasting model must be fitted " "before persistence."
+                "The forecasting model must be fitted before persistence."
             )
 
         sku_component = self._safe_component(sku_id)

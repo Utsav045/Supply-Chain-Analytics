@@ -17,7 +17,6 @@ def add_rolling_features(df, date_column):
 
     # Create rolling features
     for column in numeric_columns:
-
         # 3-period rolling average
         df[column + "_rolling_mean_3"] = (
             df[column].rolling(window=3, min_periods=1).mean()

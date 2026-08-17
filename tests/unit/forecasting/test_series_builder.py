@@ -2,11 +2,8 @@
 
 import pandas as pd
 import pytest
-
 from src.forecasting.series_builder import build_demand_series
-from src.forecasting.validation import (
-    ForecastingDataValidationError,
-)
+from src.forecasting.validation import ForecastingDataValidationError
 
 
 @pytest.fixture

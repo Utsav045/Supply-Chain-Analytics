@@ -76,7 +76,7 @@ def get_reports():
             raise HTTPException(
                 status_code=500,
                 detail=(
-                    "Missing required columns in sales dataset: " f"{missing_columns}"
+                    f"Missing required columns in sales dataset: {missing_columns}"
                 ),
             )
 

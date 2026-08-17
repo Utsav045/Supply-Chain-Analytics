@@ -2,20 +2,11 @@
 
 import pandas as pd
 import pytest
-
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.moving_average import MovingAverageForecaster
 from src.forecasting.schemas import ForecastRequest
-from src.forecasting.validation import (
-    ForecastingDataValidationError,
-)
-from src.services.forecasting_service import (
-    ForecastingService,
-)
+from src.forecasting.validation import ForecastingDataValidationError
+from src.services.forecasting_service import ForecastingService
 
 
 @pytest.fixture

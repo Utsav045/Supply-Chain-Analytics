@@ -5,18 +5,11 @@ from collections.abc import Iterator
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
 from src.api.app import create_app
-from src.api.forecasting import (
-    get_forecasting_service,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
+from src.api.forecasting import get_forecasting_service
+from src.forecasting.moving_average import MovingAverageForecaster
 from src.forecasting.persistence import ModelStore
-from src.services.forecasting_service import (
-    ForecastingService,
-)
+from src.services.forecasting_service import ForecastingService
 
 
 def build_observations() -> list[dict[str, object]]:

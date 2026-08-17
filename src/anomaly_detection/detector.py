@@ -39,8 +39,7 @@ class AnomalyDetector:
             return detect_isolation_forest(df)
 
         raise ValueError(
-            f"Unsupported method: {method}. "
-            "Choose from: iqr, zscore, isolation_forest."
+            f"Unsupported method: {method}. Choose from: iqr, zscore, isolation_forest."
         )
 
 

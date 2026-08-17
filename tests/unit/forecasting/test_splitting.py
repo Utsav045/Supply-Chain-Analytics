@@ -2,13 +2,8 @@
 
 import pandas as pd
 import pytest
-
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.splitting import (
-    chronological_train_test_split,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.splitting import chronological_train_test_split
 
 
 @pytest.fixture

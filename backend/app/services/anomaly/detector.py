@@ -70,24 +70,19 @@ class AnomalyDetector:
     ) -> List[bool]:
 
         if method == "z_score":
-
             return AnomalyDetector.zscore(values, threshold)
 
         elif method == "iqr":
-
             return AnomalyDetector.iqr(values)
 
         elif method == "isolation_forest":
-
             return AnomalyDetector.isolation_forest(values, contamination)
 
         else:
-
             raise ValueError(f"Unsupported method: {method}")
 
 
 if __name__ == "__main__":
-
     # ==============================
     # SALES ANOMALY DETECTION
     # ==============================

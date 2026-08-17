@@ -53,17 +53,13 @@ def fill_missing_values(df):
     """
 
     for column in df.columns:
-
         if pd.api.types.is_numeric_dtype(df[column]):
-
             df[column] = df[column].fillna(df[column].median())
 
         else:
-
             mode = df[column].mode()
 
             if not mode.empty:
-
                 df[column] = df[column].fillna(mode.iloc[0])
 
     return df

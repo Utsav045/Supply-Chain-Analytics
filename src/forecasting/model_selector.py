@@ -16,9 +16,7 @@ from src.forecasting.model_comparison import (
     ModelComparisonResult,
     compare_backtest_results,
 )
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
+from src.forecasting.model_validation import ModelInputValidationError
 
 
 @dataclass(frozen=True, slots=True)
@@ -135,7 +133,7 @@ class AutomaticModelSelector:
             )
 
             raise ModelInputValidationError(
-                "Every forecasting candidate failed. " f"{failure_summary}"
+                f"Every forecasting candidate failed. {failure_summary}"
             )
 
         comparison = compare_backtest_results(
@@ -149,7 +147,7 @@ class AutomaticModelSelector:
 
         if not isinstance(selected_model, BaseForecaster):
             raise ModelInputValidationError(
-                "The selected factory did not return a " "BaseForecaster instance."
+                "The selected factory did not return a BaseForecaster instance."
             )
 
         selected_model.fit(

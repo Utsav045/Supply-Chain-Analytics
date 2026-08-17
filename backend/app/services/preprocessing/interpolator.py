@@ -233,7 +233,7 @@ class Interpolator:
             # This is a simple check; could be more sophisticated
             if max_diff > pd.Timedelta(days=1):
                 logger.warning(
-                    f"DataFrame has gaps in DatetimeIndex. " f"Max gap: {max_diff}"
+                    f"DataFrame has gaps in DatetimeIndex. Max gap: {max_diff}"
                 )
                 return False
 

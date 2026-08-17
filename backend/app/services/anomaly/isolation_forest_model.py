@@ -49,7 +49,6 @@ class IsolationForestModel:
 
 
 if __name__ == "__main__":
-
     csv_path = Path("data/processed/clean_sales_data.csv")
 
     df = pd.read_csv(csv_path)

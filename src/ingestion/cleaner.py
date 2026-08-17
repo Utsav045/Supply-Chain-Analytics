@@ -7,13 +7,11 @@ def clean_data(df):
     df = df.drop_duplicates()
 
     for column in df.columns:
-
         # Convert numeric-like columns
         converted = pd.to_numeric(df[column], errors="coerce")
 
         # If most values are numeric, treat as numeric
         if converted.notna().sum() > 0:
-
             median_value = converted.median()
 
             converted = converted.fillna(median_value)

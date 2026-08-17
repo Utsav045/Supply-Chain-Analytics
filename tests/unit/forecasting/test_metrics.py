@@ -4,11 +4,7 @@ import math
 
 import numpy as np
 import pytest
-
-from src.forecasting.metrics import (
-    calculate_safe_mape,
-    evaluate_forecast,
-)
+from src.forecasting.metrics import calculate_safe_mape, evaluate_forecast
 
 
 def test_evaluate_forecast_returns_required_metrics() -> None:

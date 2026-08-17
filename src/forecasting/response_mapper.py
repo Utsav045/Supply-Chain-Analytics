@@ -6,17 +6,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.schemas import (
-    ForecastMetrics,
-    ForecastPoint,
-    ForecastResponse,
-)
-from src.services.forecasting_service import (
-    ForecastingServiceResult,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.schemas import ForecastMetrics, ForecastPoint, ForecastResponse
+from src.services.forecasting_service import ForecastingServiceResult
 
 REQUIRED_FORECAST_COLUMNS = {
     "predicted_demand",
@@ -134,7 +126,7 @@ def build_forecast_response(
 
     if len(forecast) != result.forecast_horizon:
         raise ModelInputValidationError(
-            "Forecast output length does not match " "forecast_horizon."
+            "Forecast output length does not match forecast_horizon."
         )
 
     forecast_points = [

@@ -3,7 +3,6 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from src.forecasting.model_validation import (
     ModelInputValidationError,
     infer_series_frequency,
@@ -35,7 +34,7 @@ def test_valid_demand_series_is_standardized(
     """Valid demand should be returned as floating-point data."""
     result = validate_demand_series(daily_demand)
 
-    assert result.dtype == float
+    assert result.dtype is float
     assert result.name == "demand"
     assert result.index.is_monotonic_increasing
 
@@ -170,7 +169,7 @@ def test_valid_exogenous_features_are_accepted(
     )
 
     assert result.shape == (7, 3)
-    assert all(dtype == float for dtype in result.dtypes)
+    assert all(dtype is float for dtype in result.dtypes)
 
 
 def test_exogenous_index_must_match_demand(

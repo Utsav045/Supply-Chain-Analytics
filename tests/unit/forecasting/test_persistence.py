@@ -2,14 +2,8 @@
 
 import pandas as pd
 import pytest
-
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
-from src.forecasting.persistence import (
-    ModelPersistenceError,
-    ModelStore,
-)
+from src.forecasting.moving_average import MovingAverageForecaster
+from src.forecasting.persistence import ModelPersistenceError, ModelStore
 
 
 @pytest.fixture
