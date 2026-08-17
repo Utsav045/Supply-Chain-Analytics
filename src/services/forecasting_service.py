@@ -13,12 +13,8 @@ from src.forecasting.arima_config import ARIMAConfig
 from src.forecasting.backtesting import ForecasterFactory
 from src.forecasting.base import BaseForecaster
 from src.forecasting.model_selector import AutomaticModelSelector
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.moving_average import MovingAverageForecaster
 from src.forecasting.persistence import ModelStore
 from src.forecasting.schemas import ForecastRequest
 from src.forecasting.series_builder import build_demand_series
@@ -173,7 +169,7 @@ class ForecastingService:
 
         if not isinstance(model, BaseForecaster):
             raise ModelInputValidationError(
-                "Every model factory must return a " "BaseForecaster instance."
+                "Every model factory must return a BaseForecaster instance."
             )
 
         if isinstance(model, MovingAverageForecaster):
@@ -307,8 +303,7 @@ class ForecastingService:
         if persist_model:
             if self._model_store is None:
                 raise ModelInputValidationError(
-                    "Model persistence was requested, but no "
-                    "ModelStore is configured."
+                    "Model persistence was requested, but no ModelStore is configured."
                 )
 
             artifact = self._model_store.save(

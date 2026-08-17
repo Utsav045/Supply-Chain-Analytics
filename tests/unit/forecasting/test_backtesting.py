@@ -5,15 +5,10 @@ from typing import cast
 
 import pandas as pd
 import pytest
-
 from src.forecasting.backtesting import walk_forward_backtest
 from src.forecasting.base import BaseForecaster
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.moving_average import MovingAverageForecaster
 
 
 @pytest.fixture

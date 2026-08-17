@@ -4,19 +4,10 @@ from datetime import UTC, datetime
 
 import pandas as pd
 import pytest
-
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
-from src.forecasting.moving_average import (
-    MovingAverageForecaster,
-)
-from src.forecasting.response_mapper import (
-    build_forecast_response,
-)
-from src.services.forecasting_service import (
-    ForecastingServiceResult,
-)
+from src.forecasting.model_validation import ModelInputValidationError
+from src.forecasting.moving_average import MovingAverageForecaster
+from src.forecasting.response_mapper import build_forecast_response
+from src.services.forecasting_service import ForecastingServiceResult
 
 
 def make_service_result() -> ForecastingServiceResult:

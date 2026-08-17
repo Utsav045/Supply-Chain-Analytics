@@ -7,9 +7,7 @@ def process_datetime(df):
     print("Processing datetime columns...")
 
     for column in df.columns:
-
         if "date" in column.lower():
-
             df[column] = pd.to_datetime(df[column], errors="coerce")
 
             df[column + "_year"] = df[column].dt.year

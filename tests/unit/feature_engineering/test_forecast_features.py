@@ -3,10 +3,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-
-from src.feature_engineering.forecast_features import (
-    create_forecasting_features,
-)
+from src.feature_engineering.forecast_features import create_forecasting_features
 
 
 @pytest.fixture

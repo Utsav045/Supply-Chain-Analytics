@@ -9,13 +9,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
-from app.database.models import (
-    Anomaly,
-    Forecast,
-    Inventory,
-    Product,
-    Sales,
-)
+from app.database.models import Anomaly, Forecast, Inventory, Product, Sales
 
 router = APIRouter()
 
@@ -24,15 +18,9 @@ router = APIRouter()
 def get_dashboard_summary(db: Session = Depends(get_db)):
     """Return aggregated KPIs for the executive dashboard."""
 
-    total_products = (
-        db.query(func.count(Product.id)).scalar()
-        or 0
-    )
+    total_products = db.query(func.count(Product.id)).scalar() or 0
 
-    total_sales_volume = (
-        db.query(func.coalesce(func.sum(Sales.sales), 0)).scalar()
-        or 0
-    )
+    total_sales_volume = db.query(func.coalesce(func.sum(Sales.sales), 0)).scalar() or 0
 
     total_revenue = (
         db.query(
@@ -45,21 +33,15 @@ def get_dashboard_summary(db: Session = Depends(get_db)):
     )
 
     total_inventory = (
-        db.query(func.coalesce(func.sum(Inventory.inventory), 0)).scalar()
-        or 0
+        db.query(func.coalesce(func.sum(Inventory.inventory), 0)).scalar() or 0
     )
 
     total_forecast = (
-        db.query(
-            func.coalesce(func.sum(Forecast.forecast_value), 0)
-        ).scalar()
-        or 0
+        db.query(func.coalesce(func.sum(Forecast.forecast_value), 0)).scalar() or 0
     )
 
     total_anomalies = (
-        db.query(func.count(Anomaly.id))
-        .filter(Anomaly.is_anomaly.is_(True))
-        .scalar()
+        db.query(func.count(Anomaly.id)).filter(Anomaly.is_anomaly.is_(True)).scalar()
         or 0
     )
 

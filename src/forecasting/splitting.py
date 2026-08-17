@@ -100,8 +100,7 @@ def chronological_train_test_split(
 
     if train_size < minimum_train_size:
         raise ModelInputValidationError(
-            f"Training data must contain at least "
-            f"{minimum_train_size} observations."
+            f"Training data must contain at least {minimum_train_size} observations."
         )
 
     train_series = validated_series.iloc[:train_size].copy()

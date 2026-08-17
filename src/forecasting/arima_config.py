@@ -3,9 +3,7 @@
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
+from src.forecasting.model_validation import ModelInputValidationError
 
 
 def _validate_order_value(

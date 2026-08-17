@@ -7,9 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src.forecasting.backtesting import BacktestResult
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
+from src.forecasting.model_validation import ModelInputValidationError
 
 METRIC_DIRECTIONS = {
     "mae": "minimize",
@@ -52,7 +50,7 @@ def compare_backtest_results(
         supported = ", ".join(METRIC_DIRECTIONS)
 
         raise ModelInputValidationError(
-            f"Unsupported comparison metric. Use one of: " f"{supported}."
+            f"Unsupported comparison metric. Use one of: {supported}."
         )
 
     if not results:
@@ -76,26 +74,26 @@ def compare_backtest_results(
 
         if normalized_metric not in result.metrics:
             raise ModelInputValidationError(
-                f"{result.model_name} does not contain " f"{normalized_metric}."
+                f"{result.model_name} does not contain {normalized_metric}."
             )
 
         raw_value = result.metrics[normalized_metric]
 
         if raw_value is None:
             raise ModelInputValidationError(
-                f"{normalized_metric} is unavailable for " f"{result.model_name}."
+                f"{normalized_metric} is unavailable for {result.model_name}."
             )
 
         try:
             metric_value = float(raw_value)
         except (TypeError, ValueError) as exc:
             raise ModelInputValidationError(
-                f"{normalized_metric} must be numeric for " f"{result.model_name}."
+                f"{normalized_metric} must be numeric for {result.model_name}."
             ) from exc
 
         if not np.isfinite(metric_value):
             raise ModelInputValidationError(
-                f"{normalized_metric} must be finite for " f"{result.model_name}."
+                f"{normalized_metric} must be finite for {result.model_name}."
             )
 
         record: dict[str, object] = {
