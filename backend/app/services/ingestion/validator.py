@@ -10,16 +10,9 @@ Author: Antigravity AI
 from typing import List
 
 import pandas as pd
-
-from app.core.constants import (
-    CATEGORY_COLUMN,
-    DATE_COLUMN,
-    INVENTORY_COLUMN,
-    PRICE_COLUMN,
-    PRODUCT_ID_COLUMN,
-    PRODUCT_NAME_COLUMN,
-    SALES_COLUMN,
-)
+from app.core.constants import (CATEGORY_COLUMN, DATE_COLUMN, INVENTORY_COLUMN,
+                                PRICE_COLUMN, PRODUCT_ID_COLUMN,
+                                PRODUCT_NAME_COLUMN, SALES_COLUMN)
 from app.core.logger import logger
 from app.services.utils.exceptions import ValidationError
 

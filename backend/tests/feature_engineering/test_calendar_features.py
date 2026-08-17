@@ -2,9 +2,8 @@
 import pandas as pd
 import pytest
 
-from backend.app.services.feature_engineering.calendar_features import (
-    CalendarFeatureGenerator,
-)
+from backend.app.services.feature_engineering.calendar_features import \
+    CalendarFeatureGenerator
 
 
 @pytest.fixture

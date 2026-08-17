@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
+
 from src.forecasting.schemas import DemandObservation, ForecastRequest
 
 

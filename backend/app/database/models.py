@@ -7,20 +7,10 @@ Models include Products, Sales, Inventory, Forecasts, and Anomalies.
 Author: Antigravity AI
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    Date,
-    DateTime,
-    Float,
-    ForeignKey,
-    Integer,
-    String,
-    func,
-)
-from sqlalchemy.orm import relationship
-
 from app.database.connection import Base
+from sqlalchemy import (Boolean, Column, Date, DateTime, Float, ForeignKey,
+                        Integer, String, func)
+from sqlalchemy.orm import relationship
 
 
 class Product(Base):

@@ -10,9 +10,8 @@ Author: Antigravity AI
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
 from app.core.constants import SUPPORTED_ANOMALY_METHODS
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AnomalyBase(BaseModel):

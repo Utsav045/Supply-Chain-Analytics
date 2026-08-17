@@ -11,16 +11,9 @@ Author: Antigravity AI
 from typing import Dict, Optional
 
 import pandas as pd
-
-from app.core.constants import (
-    DAILY,
-    DEMAND_COLUMN,
-    INVENTORY_COLUMN,
-    MONTHLY,
-    SALES_COLUMN,
-    SUPPORTED_FREQUENCIES,
-    WEEKLY,
-)
+from app.core.constants import (DAILY, DEMAND_COLUMN, INVENTORY_COLUMN,
+                                MONTHLY, SALES_COLUMN, SUPPORTED_FREQUENCIES,
+                                WEEKLY)
 from app.core.logger import logger
 from app.services.utils.exceptions import DataCleaningError
 

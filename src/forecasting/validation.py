@@ -43,7 +43,9 @@ def validate_forecasting_dataframe(
         )
 
     if dataframe.empty:
-        raise ForecastingDataValidationError("Forecasting dataset cannot be empty.")
+        raise ForecastingDataValidationError(
+            "Forecasting dataset cannot be empty."
+        )
 
     missing_columns = REQUIRED_COLUMNS.difference(dataframe.columns)
 
@@ -55,6 +57,7 @@ def validate_forecasting_dataframe(
 
     validated = dataframe.copy()
 
+    # Validate and standardize dates.
     validated["date"] = pd.to_datetime(
         validated["date"],
         errors="coerce",
@@ -62,9 +65,16 @@ def validate_forecasting_dataframe(
     )
 
     if validated["date"].isna().any():
-        raise ForecastingDataValidationError("The date column contains invalid values.")
+        raise ForecastingDataValidationError(
+            "The date column contains invalid values."
+        )
 
-    validated["sku_id"] = validated["sku_id"].astype("string").str.strip()
+    # Validate SKU identifiers.
+    validated["sku_id"] = (
+        validated["sku_id"]
+        .astype("string")
+        .str.strip()
+    )
 
     if validated["sku_id"].isna().any():
         raise ForecastingDataValidationError(
@@ -72,8 +82,11 @@ def validate_forecasting_dataframe(
         )
 
     if validated["sku_id"].eq("").any():
-        raise ForecastingDataValidationError("The sku_id column contains empty values.")
+        raise ForecastingDataValidationError(
+            "The sku_id column contains empty values."
+        )
 
+    # Validate numeric columns.
     for column in NUMERIC_COLUMNS.intersection(validated.columns):
         validated[column] = pd.to_numeric(
             validated[column],
@@ -92,36 +105,42 @@ def validate_forecasting_dataframe(
                 f"{column} cannot contain negative values."
             )
 
+    # Validate boolean columns.
     for column in BOOLEAN_COLUMNS.intersection(validated.columns):
         validated[column] = normalize_boolean_column(
             validated[column],
             column,
         )
 
+    # Clean optional text columns.
     for column in {
         "category",
         "location_id",
     }.intersection(validated.columns):
         validated[column] = (
-            validated[column].astype("string").str.strip().replace("", pd.NA)
+            validated[column]
+            .astype("string")
+            .str.strip()
+            .replace("", pd.NA)
         )
 
-    duplicate_keys = ["date", "sku_id"]
+    # IMPORTANT:
+    # Do not reject duplicate date/SKU/location rows here.
+    #
+    # The source sales dataset can contain multiple transactions
+    # for the same product, location and date. Those transactions
+    # are aggregated later by series_builder.py using resample().
+    #
+    # Example:
+    #   2024-01-01 | P001 | Mumbai | 5
+    #   2024-01-01 | P001 | Mumbai | 3
+    #
+    # becomes:
+    #   2024-01-01 | P001 | Mumbai | 8
 
-    if "location_id" in validated.columns:
-        duplicate_keys.append("location_id")
-
-    duplicated_rows = validated.duplicated(
-        subset=duplicate_keys,
-        keep=False,
-    )
-
-    if duplicated_rows.any():
-        raise ForecastingDataValidationError(
-            "Duplicate time-series observations were detected."
-        )
-
-    return validated.sort_values(duplicate_keys).reset_index(drop=True)
+    return validated.sort_values(
+        ["date", "sku_id"]
+    ).reset_index(drop=True)
 
 
 def normalize_boolean_column(
@@ -142,7 +161,9 @@ def normalize_boolean_column(
 
     normalized = series.map(
         lambda value: (
-            mapping.get(str(value).strip().lower()) if pd.notna(value) else pd.NA
+            mapping.get(str(value).strip().lower())
+            if pd.notna(value)
+            else pd.NA
         )
     )
 

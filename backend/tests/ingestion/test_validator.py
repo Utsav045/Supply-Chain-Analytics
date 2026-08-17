@@ -1,15 +1,8 @@
 import pandas as pd
 import pytest
-
-from app.core.constants import (
-    CATEGORY_COLUMN,
-    DATE_COLUMN,
-    INVENTORY_COLUMN,
-    PRICE_COLUMN,
-    PRODUCT_ID_COLUMN,
-    PRODUCT_NAME_COLUMN,
-    SALES_COLUMN,
-)
+from app.core.constants import (CATEGORY_COLUMN, DATE_COLUMN, INVENTORY_COLUMN,
+                                PRICE_COLUMN, PRODUCT_ID_COLUMN,
+                                PRODUCT_NAME_COLUMN, SALES_COLUMN)
 from app.services.ingestion.validator import DataValidator
 from app.services.utils.exceptions import ValidationError
 

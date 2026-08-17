@@ -3,14 +3,13 @@
 import numpy as np
 import pandas as pd
 import pytest
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-    infer_series_frequency,
-    validate_confidence_level,
-    validate_demand_series,
-    validate_exogenous_features,
-    validate_forecast_horizon,
-)
+
+from src.forecasting.model_validation import (ModelInputValidationError,
+                                              infer_series_frequency,
+                                              validate_confidence_level,
+                                              validate_demand_series,
+                                              validate_exogenous_features,
+                                              validate_forecast_horizon)
 
 
 @pytest.fixture

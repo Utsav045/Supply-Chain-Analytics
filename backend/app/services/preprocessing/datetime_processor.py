@@ -9,7 +9,6 @@ Author: Antigravity AI
 """
 
 import pandas as pd
-
 from app.core.constants import DATE_COLUMN
 from app.core.logger import logger
 from app.services.utils.exceptions import DataCleaningError

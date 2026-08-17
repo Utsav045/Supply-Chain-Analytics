@@ -2,9 +2,8 @@
 import pandas as pd
 import pytest
 
-from backend.app.services.feature_engineering.rolling_features import (
-    RollingFeatureGenerator,
-)
+from backend.app.services.feature_engineering.rolling_features import \
+    RollingFeatureGenerator
 
 
 @pytest.fixture

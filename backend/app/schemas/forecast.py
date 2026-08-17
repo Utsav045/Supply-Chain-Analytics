@@ -10,9 +10,8 @@ Author: Antigravity AI
 from datetime import date, datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
 from app.core.constants import DEFAULT_FORECAST_DAYS, SUPPORTED_FORECAST_MODELS
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ForecastBase(BaseModel):

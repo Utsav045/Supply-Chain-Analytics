@@ -4,11 +4,10 @@ Orders API Router
 Exposes sales records as order records for the Supply Chain Analytics frontend.
 """
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-
 from app.database.connection import get_db
 from app.database.models import Sales
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

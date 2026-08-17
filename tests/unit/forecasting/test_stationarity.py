@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+
 from src.forecasting.model_validation import ModelInputValidationError
 from src.forecasting.stationarity import difference_series, run_adf_test
 

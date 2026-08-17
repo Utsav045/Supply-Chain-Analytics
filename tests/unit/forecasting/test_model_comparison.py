@@ -2,6 +2,7 @@
 
 import pandas as pd
 import pytest
+
 from src.forecasting.backtesting import BacktestResult
 from src.forecasting.model_comparison import compare_backtest_results
 from src.forecasting.model_validation import ModelInputValidationError

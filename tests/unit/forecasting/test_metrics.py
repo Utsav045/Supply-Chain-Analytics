@@ -4,6 +4,7 @@ import math
 
 import numpy as np
 import pytest
+
 from src.forecasting.metrics import calculate_safe_mape, evaluate_forecast
 
 

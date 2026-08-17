@@ -2,7 +2,8 @@
 import pandas as pd
 import pytest
 
-from backend.app.services.feature_engineering.lag_features import LagFeatureGenerator
+from backend.app.services.feature_engineering.lag_features import \
+    LagFeatureGenerator
 
 
 @pytest.fixture

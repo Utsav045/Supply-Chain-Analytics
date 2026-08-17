@@ -2,10 +2,9 @@
 
 import pandas as pd
 import pytest
-from src.forecasting.validation import (
-    ForecastingDataValidationError,
-    validate_forecasting_dataframe,
-)
+
+from src.forecasting.validation import (ForecastingDataValidationError,
+                                        validate_forecasting_dataframe)
 
 
 @pytest.fixture

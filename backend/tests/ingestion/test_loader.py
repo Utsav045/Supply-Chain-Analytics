@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from app.services.ingestion.loader import DataLoader
 from app.services.utils.exceptions import DataLoadError
 

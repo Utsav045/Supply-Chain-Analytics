@@ -1,6 +1,7 @@
 """Tests for ARIMA model configuration."""
 
 import pytest
+
 from src.forecasting.arima_config import ARIMAConfig, generate_arima_configs
 from src.forecasting.model_validation import ModelInputValidationError
 

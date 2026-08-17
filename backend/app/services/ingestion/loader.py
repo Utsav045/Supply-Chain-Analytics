@@ -10,7 +10,6 @@ import os
 from typing import Union
 
 import pandas as pd
-
 from app.core.logger import logger
 from app.services.utils.exceptions import DataLoadError
 

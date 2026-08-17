@@ -8,13 +8,12 @@ Author: Antigravity AI
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from sqlalchemy.sql import text
-
 from app.core.config import settings
 from app.core.logger import logger
 from app.database.connection import get_db
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 router = APIRouter()
 

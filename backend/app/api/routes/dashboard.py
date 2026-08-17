@@ -4,12 +4,11 @@ Dashboard API Router
 Provides aggregated KPI data for the Supply Chain Analytics dashboard.
 """
 
+from app.database.connection import get_db
+from app.database.models import Anomaly, Forecast, Inventory, Product, Sales
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-
-from app.database.connection import get_db
-from app.database.models import Anomaly, Forecast, Inventory, Product, Sales
 
 router = APIRouter()
 

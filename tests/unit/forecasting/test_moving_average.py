@@ -2,6 +2,7 @@
 
 import pandas as pd
 import pytest
+
 from src.forecasting.moving_average import MovingAverageForecaster
 
 

@@ -5,6 +5,7 @@ from collections.abc import Iterator
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
 from src.api.app import create_app
 from src.api.forecasting import get_forecasting_service
 from src.forecasting.moving_average import MovingAverageForecaster

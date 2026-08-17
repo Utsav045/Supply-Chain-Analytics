@@ -6,9 +6,7 @@ import pytest
 
 from src.forecasting.arima import ARIMAForecaster
 from src.forecasting.arima_config import ARIMAConfig
-from src.forecasting.model_validation import (
-    ModelInputValidationError,
-)
+from src.forecasting.model_validation import ModelInputValidationError
 
 
 @pytest.fixture

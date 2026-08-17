@@ -1,11 +1,6 @@
 import pandas as pd
-
-from app.core.constants import (
-    DATE_COLUMN,
-    PRICE_COLUMN,
-    PRODUCT_ID_COLUMN,
-    SALES_COLUMN,
-)
+from app.core.constants import (DATE_COLUMN, PRICE_COLUMN, PRODUCT_ID_COLUMN,
+                                SALES_COLUMN)
 from app.services.ingestion.cleaner import DataCleaner
 
 

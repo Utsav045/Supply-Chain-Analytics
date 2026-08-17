@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+
 from src.forecasting.decomposition import decompose_time_series
 from src.forecasting.model_validation import ModelInputValidationError
 

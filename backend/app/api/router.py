@@ -4,18 +4,9 @@ API Router Registration
 Aggregates and registers all individual API route modules.
 """
 
+from app.api.routes import (anomaly, dashboard, forecast, health, inventory,
+                            orders, reports, suppliers)
 from fastapi import APIRouter
-
-from app.api.routes import (
-    anomaly,
-    dashboard,
-    forecast,
-    health,
-    inventory,
-    orders,
-    reports,
-    suppliers,
-)
 
 api_router = APIRouter()
 
