@@ -4,6 +4,13 @@ interface OrdersTableProps {
   orders: Order[];
 }
 
+const formatCurrency = (value: number) => {
+  return `₹${value.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
 const OrdersTable = ({ orders }: OrdersTableProps) => {
   if (orders.length === 0) {
     return (
@@ -34,8 +41,8 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
               <td>{order.productId}</td>
               <td>{order.date}</td>
               <td>{order.quantity}</td>
-              <td>₹{order.price.toFixed(2)}</td>
-              <td>₹{order.total.toFixed(2)}</td>
+              <td>{formatCurrency(order.price)}</td>
+              <td>{formatCurrency(order.total)}</td>
             </tr>
           ))}
         </tbody>

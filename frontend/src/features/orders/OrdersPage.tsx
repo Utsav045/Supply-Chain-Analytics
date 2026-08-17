@@ -84,7 +84,13 @@ const OrdersPage = () => {
 
         <div className="inventory-card">
           <span>Total Revenue</span>
-          <strong>₹{totalRevenue.toFixed(2)}</strong>
+          <strong>
+            ₹
+            {totalRevenue.toLocaleString("en-IN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </strong>
         </div>
       </div>
 
