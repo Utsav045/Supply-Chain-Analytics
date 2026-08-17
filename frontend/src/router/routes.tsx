@@ -7,6 +7,7 @@ import InventoryPage from "../features/inventory/InventoryPage";
 import OrdersPage from "../features/orders/OrdersPage";
 import SuppliersPage from "../features/suppliers/SuppliersPage";
 import Reports from "../pages/Reports";
+import Settings from "../pages/Settings";
 
 const routes: RouteObject[] = [
   {
@@ -36,6 +37,10 @@ const routes: RouteObject[] = [
       {
         path: "reports",
         element: <Reports />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
     ],
   },
