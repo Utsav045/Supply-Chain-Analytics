@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import type {
-  ForecastExecutionRequest,
+  ForecastRequest,
   ForecastResponse,
 } from "./types";
 
@@ -12,19 +12,11 @@ const forecastingApi = axios.create({
   },
 });
 
-export const getForecastingModels = async (): Promise<string[]> => {
-  const response = await forecastingApi.get<string[]>(
-    "/forecasting/models",
-  );
-
-  return response.data;
-};
-
 export const generateForecast = async (
-  request: ForecastExecutionRequest,
+  request: ForecastRequest,
 ): Promise<ForecastResponse> => {
   const response = await forecastingApi.post<ForecastResponse>(
-    "/forecasting/forecast",
+    "/forecast",
     request,
   );
 

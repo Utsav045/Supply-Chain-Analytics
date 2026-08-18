@@ -1,27 +1,23 @@
-import { useEffect, useState } from "react";
-import { getDashboardSummary } from "./dashboardService";
-import type { DashboardSummary } from "./types";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import type { AppDispatch, RootState } from "../../store/store";
+import { fetchDashboardData } from "./dashboardSlice";
+import SalesTrendChart from "./SalesTrendChart";
+import TopProductsChart from "./TopProductsChart";
+import ServiceLevelChart from "./ServiceLevelChart";
+import SupplyRiskAlerts from "./SupplyRiskAlerts";
 
 const DashboardPage = () => {
-  const [data, setData] = useState<DashboardSummary | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.dashboard,
+  );
 
   useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const result = await getDashboardSummary();
-        setData(result);
-      } catch (err) {
-        console.error("Failed to load dashboard:", err);
-        setError("Failed to load dashboard data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDashboard();
-  }, []);
+    void dispatch(fetchDashboardData());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -56,6 +52,7 @@ const DashboardPage = () => {
       title: "Total Revenue",
       value: `₹${data.total_revenue.toLocaleString("en-IN", {
         minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
       })}`,
       period: "Total sales revenue",
     },
@@ -68,6 +65,7 @@ const DashboardPage = () => {
 
   return (
     <section className="dashboard-page">
+      {/* Page Header */}
       <div className="dashboard-heading">
         <div>
           <h1>Executive Overview</h1>
@@ -75,6 +73,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* KPI Cards */}
       <div className="kpi-grid">
         {kpiCards.map((card) => (
           <article className="kpi-card" key={card.title}>
@@ -91,7 +90,39 @@ const DashboardPage = () => {
         ))}
       </div>
 
+      {/* Sales & Products Charts */}
+      <div className="dashboard-charts-grid">
+        <SalesTrendChart />
+        <TopProductsChart />
+      </div>
+
+      {/* Executive Metrics */}
+      <div className="dashboard-metrics-grid">
+        {/* 1. Service Level */}
+        <ServiceLevelChart value={data.service_level} />
+
+        {/* 2. Top Performing Category */}
+        <article className="dashboard-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Top Performing Category</h2>
+              <span>Category with highest sales volume</span>
+            </div>
+          </div>
+
+          <div className="metric-highlight">
+            <strong>Electronics</strong>
+            <span>Top category</span>
+          </div>
+        </article>
+
+        {/* 3. Supply Risk Alerts */}
+        <SupplyRiskAlerts count={data.anomalies.high} />
+      </div>
+
+      {/* Bottom Dashboard Panels */}
       <div className="dashboard-bottom-grid">
+        {/* Anomaly Overview */}
         <article className="dashboard-panel">
           <div className="panel-header">
             <h2>Anomaly Overview</h2>
@@ -116,6 +147,7 @@ const DashboardPage = () => {
           </div>
         </article>
 
+        {/* Supply Chain Metrics */}
         <article className="dashboard-panel">
           <div className="panel-header">
             <h2>Supply Chain Metrics</h2>

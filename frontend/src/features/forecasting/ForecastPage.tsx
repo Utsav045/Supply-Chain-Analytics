@@ -1,68 +1,45 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ForecastForm from "./ForecastForm";
 import ForecastTable from "./ForecastTable";
-import {
-  generateForecast,
-  getForecastingModels,
-} from "./forecastApi";
+import { generateForecast } from "./forecastApi";
+
 import type {
   DemandObservation,
   ForecastRequest,
   ForecastResponse,
 } from "./types";
 
-const ForecastPage = () => {
-  const [models, setModels] = useState<string[]>([]);
-  const [loadingModels, setLoadingModels] = useState(true);
+const FORECAST_MODELS = [
+  "auto",
+  "arima_1_0_0",
+  "arima_1_1_1",
+  "moving_average_3",
+  "moving_average_7",
+];
 
+const ForecastPage = () => {
   const [forecast, setForecast] =
     useState<ForecastResponse | null>(null);
 
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] =
+    useState(false);
 
-  useEffect(() => {
-    const loadModels = async () => {
-      try {
-        setLoadingModels(true);
-        setError(null);
-
-        const availableModels =
-          await getForecastingModels();
-
-        setModels(availableModels);
-      } catch (err) {
-        console.error(
-          "Failed to load forecasting models:",
-          err,
-        );
-
-        setError(
-          "Failed to load forecasting models.",
-        );
-      } finally {
-        setLoadingModels(false);
-      }
-    };
-
-    void loadModels();
-  }, []);
+  const [error, setError] =
+    useState<string | null>(null);
 
   const handleGenerateForecast = async (
     forecastRequest: ForecastRequest,
-    observations: DemandObservation[],
+    _observations: DemandObservation[],
   ) => {
     try {
       setSubmitting(true);
       setError(null);
       setForecast(null);
 
-      const result = await generateForecast({
-        forecast: forecastRequest,
-        observations,
-        persist_model: false,
-      });
+      const result = await generateForecast(
+        forecastRequest,
+      );
 
       setForecast(result);
     } catch (err) {
@@ -84,6 +61,7 @@ const ForecastPage = () => {
       <div className="inventory-header">
         <div>
           <h1>Forecast</h1>
+
           <p>
             Generate demand forecasts using historical
             supply chain data.
@@ -98,8 +76,8 @@ const ForecastPage = () => {
       )}
 
       <ForecastForm
-        models={models}
-        loadingModels={loadingModels}
+        models={FORECAST_MODELS}
+        loadingModels={false}
         onSubmit={handleGenerateForecast}
         submitting={submitting}
       />
@@ -109,16 +87,23 @@ const ForecastPage = () => {
           <div className="inventory-kpis">
             <div className="inventory-card">
               <span>SKU</span>
-              <strong>{forecast.sku_id}</strong>
+
+              <strong>
+                {forecast.sku_id}
+              </strong>
             </div>
 
             <div className="inventory-card">
               <span>Model</span>
-              <strong>{forecast.model_name}</strong>
+
+              <strong>
+                {forecast.model_name}
+              </strong>
             </div>
 
             <div className="inventory-card">
               <span>Forecast Horizon</span>
+
               <strong>
                 {forecast.forecast_horizon} days
               </strong>
@@ -156,6 +141,7 @@ const ForecastPage = () => {
               <div className="inventory-kpis">
                 <div className="inventory-card">
                   <span>MAE</span>
+
                   <strong>
                     {forecast.metrics.mae.toFixed(2)}
                   </strong>
@@ -163,6 +149,7 @@ const ForecastPage = () => {
 
                 <div className="inventory-card">
                   <span>MAPE</span>
+
                   <strong>
                     {forecast.metrics.mape !== null
                       ? `${forecast.metrics.mape.toFixed(2)}%`
@@ -172,6 +159,7 @@ const ForecastPage = () => {
 
                 <div className="inventory-card">
                   <span>RMSE</span>
+
                   <strong>
                     {forecast.metrics.rmse.toFixed(2)}
                   </strong>
@@ -179,6 +167,7 @@ const ForecastPage = () => {
 
                 <div className="inventory-card">
                   <span>R²</span>
+
                   <strong>
                     {forecast.metrics.r2 !== null
                       ? forecast.metrics.r2.toFixed(2)

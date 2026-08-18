@@ -41,7 +41,7 @@ const routes: RouteObject[] = [
         element: <LogisticsPage />,
       },
       {
-        path: "forecasting",
+        path: "forecast",
         element: <ForecastPage />,
       },
       {

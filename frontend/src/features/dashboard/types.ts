@@ -5,6 +5,7 @@ export interface DashboardSummary {
   total_inventory: number;
   total_forecast: number;
   total_anomalies: number;
+  service_level: number;
   anomalies: {
     high: number;
     medium: number;
