@@ -1404,3 +1404,500 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================
+   LOGISTICS PAGE
+   ===================================================== */
+
+.logistics-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  animation: pageFadeIn 0.25s ease;
+}
+
+.logistics-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.logistics-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+.logistics-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.logistics-search {
+  width: 270px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.logistics-search::placeholder {
+  color: #9ca3af;
+}
+
+.logistics-search:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* KPI CARDS */
+
+.logistics-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.logistics-kpi-card {
+  position: relative;
+  min-height: 118px;
+  padding: 20px;
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 4px 12px rgba(15, 23, 42, 0.025);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.logistics-kpi-card::after {
+  content: "";
+  position: absolute;
+  right: -28px;
+  bottom: -28px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.045);
+}
+
+.logistics-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 10px rgba(15, 23, 42, 0.05),
+    0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+.logistics-kpi-card span {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+}
+
+.logistics-kpi-card strong {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  margin-top: 13px;
+
+  color: #0f172a;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logistics-kpi-card small {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  margin-top: 10px;
+
+  color: #64748b;
+  font-size: 11px;
+}
+
+.logistics-positive {
+  color: #16a34a !important;
+}
+
+.logistics-info {
+  color: #2563eb !important;
+}
+
+.logistics-warning {
+  color: #dc2626 !important;
+}
+
+/* PANELS */
+
+.logistics-middle-grid,
+.logistics-bottom-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.logistics-middle-grid {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.logistics-bottom-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.logistics-panel {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 4px 14px rgba(15, 23, 42, 0.025);
+}
+
+.logistics-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.logistics-panel-header h2 {
+  margin: 0;
+
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.logistics-panel-header p {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+  font-size: 11px;
+}
+
+/* MAP */
+
+.logistics-map-panel {
+  min-height: 330px;
+}
+
+.logistics-map-placeholder {
+  min-height: 240px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 9px;
+
+  color: #64748b;
+  text-align: center;
+}
+
+.logistics-map-icon {
+  margin-bottom: 8px;
+  font-size: 34px;
+}
+
+.logistics-map-placeholder strong {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.logistics-map-placeholder span {
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+/* SHIPMENT STATUS */
+
+.logistics-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logistics-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 13px 14px;
+
+  border-radius: 9px;
+  border: 1px solid transparent;
+}
+
+.logistics-status-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.logistics-status-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.logistics-status strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.logistics-status--ontime {
+  background: #eff6ff;
+  border-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.logistics-status--ontime .logistics-status-dot {
+  background: #2563eb;
+}
+
+.logistics-status--ontime strong {
+  color: #1e40af;
+}
+
+.logistics-status--delayed {
+  background: #fffbeb;
+  border-color: #fef3c7;
+  color: #b45309;
+}
+
+.logistics-status--delayed .logistics-status-dot {
+  background: #f59e0b;
+}
+
+.logistics-status--delayed strong {
+  color: #92400e;
+}
+
+.logistics-status-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 14px;
+  padding-top: 14px;
+
+  border-top: 1px solid #f1f5f9;
+
+  color: #64748b;
+  font-size: 11px;
+}
+
+.logistics-status-total strong {
+  color: #111827;
+  font-size: 14px;
+}
+
+/* CHART */
+
+.logistics-chart {
+  width: 100%;
+  height: 230px;
+}
+
+/* PERFORMANCE */
+
+.logistics-performance {
+  display: flex;
+  flex-direction: column;
+}
+
+.logistics-performance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.logistics-performance-row:last-child {
+  border-bottom: 0;
+}
+
+.logistics-performance-row span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.logistics-performance-row strong {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* RECORDS */
+
+.logistics-records-section {
+  margin-top: 16px;
+}
+
+.logistics-records-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.logistics-records-header h2 {
+  margin: 0;
+
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.logistics-records-header p {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.logistics-records-header > span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .logistics-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .logistics-middle-grid,
+  .logistics-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .logistics-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .logistics-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .logistics-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .logistics-header h1 {
+    font-size: 21px;
+  }
+
+  .logistics-panel {
+    padding: 16px;
+  }
+
+  .logistics-kpi-card {
+    min-height: 105px;
+  }
+
+  .logistics-kpi-card strong {
+    font-size: 24px;
+  }
+
+  .logistics-records-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.logistics-status--delivered {
+  background: #ecfdf5;
+  border-color: #d1fae5;
+  color: #047857;
+}
+
+.logistics-status--delivered .logistics-status-dot {
+  background: #10b981;
+}
+
+.logistics-status--delivered strong {
+  color: #065f46;
+}
+
+.logistics-status--exception {
+  background: #fff1f2;
+  border-color: #ffe4e6;
+  color: #be123c;
+}
+
+.logistics-status--exception .logistics-status-dot {
+  background: #f43f5e;
+}
+
+.logistics-status--exception strong {
+  color: #9f1239;
+}
+
+.logistics-real-map {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+}
+
+.logistics-real-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+}
