@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 from app.database.connection import get_db
-from app.database.models import Anomaly, Forecast, Inventory, Product, Sales
+from app.database.models import Product, Sales
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -16,23 +16,60 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-DATA_FILE = (
-    Path(__file__).resolve().parents[4]
-    / "data"
-    / "processed"
-    / "clean_inventory_data.csv"
-)
+# ---------------------------------------------------------
+# Project / Dataset Paths
+# ---------------------------------------------------------
 
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
+
+DATA_DIR = PROJECT_ROOT / "data" / "processed"
+
+INVENTORY_FILE = DATA_DIR / "clean_inventory_data.csv"
+ANOMALY_FILE = DATA_DIR / "zscore_anomalies.csv"
+
+
+# ---------------------------------------------------------
+# Dashboard Summary
+# ---------------------------------------------------------
 
 @router.get("/summary")
-def get_dashboard_summary(db: Session = Depends(get_db)):
-    """Return aggregated KPIs for the executive dashboard."""
+def get_dashboard_summary(
+    db: Session = Depends(get_db),
+):
+    """
+    Return aggregated KPIs for the executive dashboard.
 
-    total_products = db.query(func.count(Product.id)).scalar() or 0
+    Forecasts are generated dynamically by the forecasting API
+    and are not persisted in the database. Therefore this
+    endpoint does not fabricate a forecast value.
+    """
+
+    # -----------------------------------------------------
+    # Products
+    # -----------------------------------------------------
+
+    total_products = (
+        db.query(func.count(Product.id)).scalar()
+        or 0
+    )
+
+    # -----------------------------------------------------
+    # Sales Volume
+    # -----------------------------------------------------
 
     total_sales_volume = (
-        db.query(func.coalesce(func.sum(Sales.sales), 0)).scalar() or 0
+        db.query(
+            func.coalesce(
+                func.sum(Sales.sales),
+                0,
+            )
+        ).scalar()
+        or 0
     )
+
+    # -----------------------------------------------------
+    # Revenue
+    # -----------------------------------------------------
 
     total_revenue = (
         db.query(
@@ -44,66 +81,119 @@ def get_dashboard_summary(db: Session = Depends(get_db)):
         or 0
     )
 
-    total_inventory = (
-        db.query(func.coalesce(func.sum(Inventory.inventory), 0)).scalar() or 0
-    )
+    # -----------------------------------------------------
+    # Inventory
+    # -----------------------------------------------------
 
-    total_forecast = (
-        db.query(func.coalesce(func.sum(Forecast.forecast_value), 0)).scalar()
-        or 0
-    )
+    total_inventory = 0.0
 
-    total_anomalies = (
-        db.query(func.count(Anomaly.id))
-        .filter(Anomaly.is_anomaly.is_(True))
-        .scalar()
-        or 0
-    )
+    if INVENTORY_FILE.exists():
+        inventory_df = pd.read_csv(INVENTORY_FILE)
 
-    high_severity_anomalies = (
-        db.query(func.count(Anomaly.id))
-        .filter(
-            Anomaly.is_anomaly.is_(True),
-            Anomaly.severity == "high",
-        )
-        .scalar()
-        or 0
-    )
+        if "closing_stock" in inventory_df.columns:
+            inventory_df["closing_stock"] = pd.to_numeric(
+                inventory_df["closing_stock"],
+                errors="coerce",
+            )
 
-    medium_severity_anomalies = (
-        db.query(func.count(Anomaly.id))
-        .filter(
-            Anomaly.is_anomaly.is_(True),
-            Anomaly.severity == "medium",
-        )
-        .scalar()
-        or 0
-    )
+            total_inventory = float(
+                inventory_df["closing_stock"]
+                .fillna(0)
+                .sum()
+            )
 
-    low_severity_anomalies = (
-        db.query(func.count(Anomaly.id))
-        .filter(
-            Anomaly.is_anomaly.is_(True),
-            Anomaly.severity == "low",
-        )
-        .scalar()
-        or 0
-    )
+    # -----------------------------------------------------
+    # Forecast
+    # -----------------------------------------------------
+    #
+    # Forecasting is currently dynamic.
+    #
+    # The forecasting API:
+    #     POST /api/v1/forecast
+    #
+    # generates forecasts on demand using ForecastingService.
+    #
+    # No forecast result is currently persisted for dashboard
+    # aggregation.
+    #
+    # Therefore we MUST NOT use total_sales_volume here as a
+    # fake forecast value.
+    #
 
-    # ---------------------------------------------------------
+    total_forecast = 0.0
+
+    # -----------------------------------------------------
+    # Anomalies
+    # -----------------------------------------------------
+
+    total_anomalies = 0
+    high_severity_anomalies = 0
+    medium_severity_anomalies = 0
+    low_severity_anomalies = 0
+
+    if ANOMALY_FILE.exists():
+        anomaly_df = pd.read_csv(ANOMALY_FILE)
+
+        if "anomaly" in anomaly_df.columns:
+            anomaly_df["anomaly"] = pd.to_numeric(
+                anomaly_df["anomaly"],
+                errors="coerce",
+            ).fillna(0)
+
+            detected = anomaly_df[
+                anomaly_df["anomaly"] == 1
+            ].copy()
+
+            if "z_score" in detected.columns:
+                detected["z_score"] = pd.to_numeric(
+                    detected["z_score"],
+                    errors="coerce",
+                )
+
+                absolute_z = detected["z_score"].abs()
+
+                # High: |z| >= 5
+                high_severity_anomalies = int(
+                    (absolute_z >= 5).sum()
+                )
+
+                # Medium: 2 <= |z| < 5
+                medium_severity_anomalies = int(
+                    (
+                        (absolute_z >= 2)
+                        & (absolute_z < 5)
+                    ).sum()
+                )
+
+                # Low: |z| < 2
+                low_severity_anomalies = int(
+                    (absolute_z < 2).sum()
+                )
+
+                total_anomalies = (
+                    high_severity_anomalies
+                    + medium_severity_anomalies
+                    + low_severity_anomalies
+                )
+
+    # -----------------------------------------------------
     # Service Level
-    # ---------------------------------------------------------
+    # -----------------------------------------------------
+
     service_level = 0.0
 
-    if DATA_FILE.exists():
-        inventory_df = pd.read_csv(DATA_FILE)
+    if INVENTORY_FILE.exists():
+        inventory_df = pd.read_csv(INVENTORY_FILE)
 
         required_columns = [
             "closing_stock",
             "reorder_level",
         ]
 
-        if all(column in inventory_df.columns for column in required_columns):
+        if all(
+            column in inventory_df.columns
+            for column in required_columns
+        ):
             inventory_df["closing_stock"] = pd.to_numeric(
                 inventory_df["closing_stock"],
                 errors="coerce",
@@ -131,11 +221,15 @@ def get_dashboard_summary(db: Session = Depends(get_db)):
                     2,
                 )
 
+    # -----------------------------------------------------
+    # Response
+    # -----------------------------------------------------
+
     return {
         "total_products": total_products,
-        "total_sales_volume": total_sales_volume,
-        "total_revenue": total_revenue,
-        "total_inventory": total_inventory,
+        "total_sales_volume": float(total_sales_volume),
+        "total_revenue": float(total_revenue),
+        "total_inventory": float(total_inventory),
         "total_forecast": total_forecast,
         "total_anomalies": total_anomalies,
         "service_level": service_level,
